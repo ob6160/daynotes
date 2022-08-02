@@ -2,20 +2,26 @@ import { h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import Day from "./Day";
 
+const getDaysArray = (start: Date, end: Date) => {
+  const days: Date[] = [];
+  for (
+    let dt = new Date(end);
+    dt >= new Date(start);
+    dt.setDate(dt.getDate() - 1)
+  ) {
+    days.push(new Date(dt));
+  }
+  return days;
+};
+
 const Timeline = () => {
-  const [days, setDays] = useState([]);
+  const sevenDaysAgo: Date = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const currentWeek = getDaysArray(sevenDaysAgo, new Date());
+
   return (
     <>
-      <button
-        onClick={() => {
-          console.log("hi");
-          setDays([...days, 1]);
-        }}
-      >
-        Add day
-      </button>
-      {days.map((day, index) => (
-        <Day tabIndex={index + 1} title="2nd August 2022" body="..." />
+      {currentWeek.map((day, index) => (
+        <Day tabIndex={index + 1} title={day.toDateString()} body="..." />
       ))}
     </>
   );
