@@ -19,23 +19,23 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
 
   return (
     <section class="title">
-      <section class="date">
+      <section>
         <h2>{dayPart}</h2>
-        <p class="tagline">
+        <p class="day-tagline">
           {monthPart} {yearPart}
         </p>
       </section>
-      <section class={`mood-${Math.random() < 0.5 ? "good" : "bad"}`}></section>
+      <section class="mood"></section>
     </section>
   );
 };
 
 const Day: FunctionComponent<Props> = ({ date, tabIndex, children }) => {
   return (
-    <li class="day">
-      <section tabIndex={tabIndex}>
+    <li class="day" tabIndex={tabIndex}>
+      <section>
         <Title date={date} />
-        {children}
+        <section class="day-content">{children}</section>
       </section>
     </li>
   );
