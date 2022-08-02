@@ -5,7 +5,9 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="daynot.es">
   <main>
-    <h1>daynot.<span class="text-gradient">es</span></h1>
+    <a href="/">
+      <h1>daynot.<span class="text-gradient">es</span></h1>
+    </a>
     <h2 class="subtitle">
       Keep track of the small things. They're worth remembering.
     </h2>
@@ -31,6 +33,12 @@ import Layout from "../layouts/Layout.astro";
 
   h1 {
     margin: 1rem 0;
+    display: inline-block;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
   main {

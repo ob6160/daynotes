@@ -20,9 +20,9 @@ const Timeline = () => {
 
   return (
     <>
-      {currentWeek.map((day, index) => (
-        <Day tabIndex={index + 1} title={day.toDateString()} body="..." />
-      ))}
+      {currentWeek.map((date, index) => {
+        return <Day tabIndex={index + 1} date={date}></Day>;
+      })}
     </>
   );
 };
