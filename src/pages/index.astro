@@ -10,14 +10,23 @@ import Layout from "../layouts/Layout.astro";
       Keep track of the small things. They're worth remembering.
     </h2>
     <ul role="list" class="link-card-grid">
-      <Timeline />
+      <Timeline client:load />
     </ul>
   </main>
 </Layout>
 
 <style>
   :root {
-    --emphasis-gradient: linear-gradient(0deg, #4f39fa, #da62c4);
+    --black: #000000ff;
+    --oxford-blue: #14213dff;
+    --orange-web: #fca311ff;
+    --platinum: #e5e5e5ff;
+    --white: #ffffffff;
+
+    --purple: #4f39fa;
+    --pink: #da62c4;
+
+    --emphasis-gradient: linear-gradient(50deg, var(--pink), var(--oxford-blue));
   }
 
   h1 {
