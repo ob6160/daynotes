@@ -1,0 +1,2 @@
+# daynotes
+what happened today?
