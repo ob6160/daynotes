@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    // Preact specific settings
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     // Enable top-level await, and other modern ESM features.
     "target": "ESNext",
     "module": "ESNext",

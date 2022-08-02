@@ -14,7 +14,6 @@ const { title } = Astro.props as Props;
   <meta name="viewport" content="width=device-width" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rakkas">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn">
   <title>{title}</title>
 </head>
@@ -31,11 +30,16 @@ const { title } = Astro.props as Props;
     --font-size-xl: clamp(2.44rem, 2.38vw + 1.85rem, 3.75rem);
 
     --vollkorn: 'Vollkorn', serif;
-    --rakkas: 'Rakkas', serif;
 
     --color-text: hsl(12, 5%, 4%);
     --color-bg: hsl(10, 21%, 95%);
     --color-border: hsl(17, 24%, 90%);
+
+    --black: #000000ff;
+    --oxford-blue: #14213dff;
+    --orange-web: #fca311ff;
+    --platinum: #e5e5e5ff;
+    --white: #ffffffff;
   }
 
   html {
