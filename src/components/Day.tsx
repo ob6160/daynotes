@@ -18,11 +18,14 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
   });
 
   return (
-    <section>
-      <h2>{dayPart}</h2>
-      <p class="tagline">
-        {monthPart} {yearPart}
-      </p>
+    <section class="title">
+      <section class="date">
+        <h2>{dayPart}</h2>
+        <p class="tagline">
+          {monthPart} {yearPart}
+        </p>
+      </section>
+      <section class={`mood-${Math.random() < 0.5 ? "good" : "bad"}`}></section>
     </section>
   );
 };

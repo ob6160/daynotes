@@ -5,6 +5,20 @@
     var(--orange-web) 30%,
     var(--color-border) 60%
   );
+
+  --mood-gradient-good: radial-gradient(
+    circle,
+    rgba(100, 254, 0, 1) 0%,
+    rgba(21, 195, 51, 1) 33%,
+    rgba(17, 131, 42, 1) 100%
+  );
+
+  --mood-gradient-bad: radial-gradient(
+    circle,
+    rgba(254, 0, 0, 1) 0%,
+    rgba(195, 22, 21, 1) 33%,
+    rgba(131, 17, 17, 1) 100%
+  );
 }
 
 .day {
@@ -37,6 +51,25 @@ h2 {
 .tagline {
   font-size: var(--font-size-sm);
   margin: 0;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mood-good {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 99%;
+  background-image: var(--mood-gradient-good);
+}
+
+.mood-bad {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 99%;
+  background-image: var(--mood-gradient-bad);
 }
 
 p {
