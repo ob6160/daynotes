@@ -2,6 +2,27 @@
   list-style: none;
   display: flex;
 
+  .tagline {
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+
+  .content {
+    margin-top: 0.5em;
+  }
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .mood {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 99%;
+    background: var(--pink);
+  }
+
   h2 {
     margin: 0;
   }
@@ -31,24 +52,4 @@
     background-size: 100% 200%;
     background-position-y: 100%;
   }
-}
-.day-tagline {
-  font-size: var(--font-size-sm);
-  margin: 0;
-}
-
-.day-content {
-  margin-top: 0.5em;
-}
-
-.title {
-  display: flex;
-  justify-content: space-between;
-}
-
-.mood {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 99%;
-  background: var(--pink);
 }
