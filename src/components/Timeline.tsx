@@ -23,6 +23,7 @@ const Timeline = () => {
       {currentWeek.map((date) => {
         return (
           <Day date={date}>
+            <input></input>
             <p>
               In publishing and graphic design, Lorem ipsum is a placeholder
               text commonly used to demonstrate the visual form of a document or

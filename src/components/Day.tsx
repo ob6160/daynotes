@@ -1,6 +1,6 @@
 import { h, Fragment, FunctionComponent } from "preact";
 import { useMemo } from "preact/hooks";
-import "./Day.css";
+import "./Day.scss";
 
 interface Props {
   date: Date;
