@@ -20,9 +20,7 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
     <section class="title">
       <section>
         <h2>{dayPart}</h2>
-        <p class="day-tagline">
-          {monthPart} {yearPart}
-        </p>
+        <p class="day-tagline">{`${monthPart} ${yearPart}`}</p>
       </section>
       <section class="mood"></section>
     </section>
