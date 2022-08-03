@@ -1,0 +1,57 @@
+.day {
+  list-style: none;
+  display: flex;
+
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  > section {
+    width: 100%;
+    text-decoration: none;
+    line-height: 1.4;
+    padding: 1em 1.3em;
+    border-radius: 0.35rem;
+    color: var(--text-color);
+    background-color: white;
+  }
+
+  &:is(:hover, :focus-within) {
+    border: 1px solid black;
+    margin: -1px;
+  }
+
+  &:is(:hover, :focus-within) h2 {
+    font-weight: 900;
+    background-image: var(--emphasis-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100% 200%;
+    background-position-y: 100%;
+  }
+}
+.day-tagline {
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.day-content {
+  margin-top: 0.5em;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mood {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 99%;
+  background: var(--pink);
+}
