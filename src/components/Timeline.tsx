@@ -1,5 +1,3 @@
-import { h, Fragment } from "preact";
-import { useState } from "preact/hooks";
 import Day from "./Day";
 
 const getDaysArray = (start: Date, end: Date) => {
@@ -19,7 +17,7 @@ const Timeline = () => {
   const currentWeek = getDaysArray(sevenDaysAgo, new Date());
 
   return (
-    <ul role="list" class="link-card-grid">
+    <ul class="link-card-grid">
       {currentWeek.map((date) => {
         return <Day date={date}></Day>;
       })}

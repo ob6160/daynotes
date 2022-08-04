@@ -1,5 +1,5 @@
-import { h, Fragment, FunctionComponent } from "preact";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { h, FunctionComponent } from "preact";
+import { useCallback, useState } from "preact/hooks";
 import "./Day.scss";
 
 interface Props {
@@ -28,9 +28,9 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
 };
 
 const Day: FunctionComponent<Props> = ({ date, children }) => {
-  const entries = useMemo(() => {
-    return [""];
-  }, []);
+  // const entries = useMemo(() => {
+  //   return [""];
+  // }, []);
 
   const [inputCount, setInputCount] = useState([0]);
 

@@ -1,10 +1,29 @@
 module.exports = {
-  // ...
+  parser: "@typescript-eslint/parser",
   extends: [
-    // ...
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:functional/no-mutations",
     "plugin:astro/recommended",
   ],
-  // ...
+  plugins: ["functional"],
+  rules: {
+    "react/prop-types": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "functional/no-let": 0,
+    "functional/prefer-readonly-type": 0,
+    "functional/no-method-signature": 0,
+    "functional/immutable-data": [
+      "error",
+      {
+        ignoreImmediateMutation: true,
+      },
+    ],
+    "no-var": "error",
+    "no-param-reassign": "error",
+    "prefer-const": "error",
+  },
   overrides: [
     {
       // Define the configuration for `.astro` file.
@@ -24,4 +43,14 @@ module.exports = {
     },
     // ...
   ],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
 };
