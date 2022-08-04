@@ -1,4 +1,5 @@
 import Day from "./Day";
+import "./Timeline.scss";
 
 const getDaysArray = (start: Date, end: Date) => {
   const days: Date[] = [];
@@ -17,11 +18,13 @@ const Timeline = () => {
   const currentWeek = getDaysArray(sevenDaysAgo, new Date());
 
   return (
-    <ul class="link-card-grid">
-      {currentWeek.map((date) => {
-        return <Day date={date}></Day>;
-      })}
-    </ul>
+    <section class="timeline">
+      <ul class="link-card-grid">
+        {currentWeek.map((date) => {
+          return <Day date={date}></Day>;
+        })}
+      </ul>
+    </section>
   );
 };
 export default Timeline;
