@@ -33,10 +33,7 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
       <section>
         <Title date={date} />
         <section class="content">
-          <input class="note" />
-          <input class="note" />
-          <input class="note" />
-          <input class="note" />
+          <input class="note" placeholder="What's happening?" />
           {children}
         </section>
       </section>

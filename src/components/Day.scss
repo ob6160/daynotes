@@ -10,6 +10,8 @@
 
   .content {
     margin-top: 0.5em;
+    display: flex;
+    flex-direction: column;
   }
 
   .title {
@@ -24,8 +26,18 @@
     background: var(--pink);
   }
 
-  // .note {
-  // }
+  input.note {
+    margin-bottom: var(--s-1);
+    border: none;
+
+    &:is(:focus) {
+      outline: none;
+      border: 4px solid black;
+      margin: -4px;
+      margin-bottom: calc(var(--s-1) - 4px);
+      outline-offset: 0;
+    }
+  }
 
   h2 {
     margin: 0;
