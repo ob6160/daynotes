@@ -1,7 +1,7 @@
 import Day from "./Day";
 import "./Timeline.scss";
 
-const getDaysArray = (start: Date, end: Date) => {
+const getDaysArray = (start: Date, end: Date): Date[] => {
   const days: Date[] = [];
   for (
     let dt = new Date(end);
@@ -13,8 +13,10 @@ const getDaysArray = (start: Date, end: Date) => {
   return days;
 };
 
+const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+
 const Timeline = () => {
-  const sevenDaysAgo: Date = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = new Date(Date.now() - sevenDaysInMs);
   const currentWeek = getDaysArray(sevenDaysAgo, new Date());
 
   return (

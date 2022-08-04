@@ -24,6 +24,7 @@
     "sass": "^1.54.2"
   },
   "dependencies": {
+    "@astrojs/vercel": "^0.4.0",
     "preact": "^10.10.0"
   }
 }

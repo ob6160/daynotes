@@ -5,4 +5,7 @@ import preact from "@astrojs/preact";
 export default defineConfig({
   // Enable Preact to support Preact JSX components.
   integrations: [preact()],
+  // Enable SSR on Vercel.
+  output: "server",
+  adapter: vercel(),
 });
