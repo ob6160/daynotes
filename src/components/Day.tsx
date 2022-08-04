@@ -28,34 +28,19 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
 };
 
 const Day: FunctionComponent<Props> = ({ date, children }) => {
-  // const entries = useMemo(() => {
-  //   return [""];
-  // }, []);
-
-  const [inputCount, setInputCount] = useState([0]);
-
-  const addNext = useCallback<h.JSX.KeyboardEventHandler<HTMLInputElement>>(
-    (e) => {
-      if (e.key === "Enter") {
-        setInputCount((prev) => [...prev, 0]);
-      }
-    },
-    []
-  );
-
+  const inputCount = [0];
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
           {inputCount.map(() => (
-            <input
-              class="note"
-              placeholder="What's happening?"
-              onKeyPress={addNext}
-            />
+            <textarea class="note" placeholder="Write in me!" />
           ))}
           {children}
+        </section>
+        <section class="controls">
+          <button class="add-note">Add note</button>
         </section>
       </section>
     </li>

@@ -9,4 +9,9 @@ export default defineConfig({
   // Enable SSR on Vercel.
   output: "server",
   adapter: vercel(),
+  vite: {
+    ssr: {
+      noExternal: ["modern-css-reset"],
+    },
+  },
 });

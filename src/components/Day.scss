@@ -27,15 +27,25 @@
     background: var(--pink);
   }
 
-  input.note {
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--s-1);
+  }
+
+  textarea.note {
+    font-size: var(--s1);
     margin-bottom: var(--s-1);
     border: none;
+    height: var(--s5);
+    resize: none;
 
     &:is(:focus) {
       outline: none;
       border: 4px solid black;
       margin: -4px;
-      margin-bottom: calc(var(--s-1) - 4px);
+      margin-bottom: calc(var(--s-1) + 4px);
       outline-offset: 0;
     }
   }
