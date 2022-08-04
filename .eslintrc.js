@@ -1,3 +1,4 @@
+// eslint-disable-next-line functional/immutable-data
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
