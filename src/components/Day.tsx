@@ -34,16 +34,17 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
         <Title date={date} />
         <section class="content">
           {inputCount.map(() => (
-            <textarea
-              class="note"
-              placeholder="Write in me!"
-            />
+            // <textarea
+            //   class="note"
+            //   placeholder="Write in me!"
+            // />
+            <></>
           ))}
           {children}
         </section>
         <section class="controls">
           <button class="action">
-            <i class="fa-regular fa-note-sticky"></i>
+            <i class="fa-solid fa-note-sticky"></i>
           </button>
           <button class="action">
             <i class="fa-solid fa-image"></i>
