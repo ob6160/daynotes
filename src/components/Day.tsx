@@ -34,16 +34,27 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
 
   const [inputCount, setInputCount] = useState([0]);
 
-  const addNext = useCallback(() => {}, []);
+  const addNext = useCallback<h.JSX.KeyboardEventHandler<HTMLInputElement>>(
+    (e) => {
+      if (e.key === "Enter") {
+        setInputCount((prev) => [...prev, 0]);
+      }
+    },
+    []
+  );
 
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
-          {inputCount.map(() => {
-            return <input class="note" placeholder="What's happening?" />;
-          })}
+          {inputCount.map(() => (
+            <input
+              class="note"
+              placeholder="What's happening?"
+              onKeyPress={addNext}
+            />
+          ))}
           {children}
         </section>
       </section>
