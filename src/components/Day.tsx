@@ -20,7 +20,7 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
     <section class="title">
       <section>
         <h2>{dayPart}</h2>
-        <p class="day-tagline">{`${monthPart} ${yearPart}`}</p>
+        <p class="tagline">{`${monthPart} ${yearPart}`}</p>
       </section>
       <section class="mood"></section>
     </section>
@@ -32,7 +32,13 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
     <li class="day">
       <section>
         <Title date={date} />
-        <section class="day-content">{children}</section>
+        <section class="content">
+          <input class="note" />
+          <input class="note" />
+          <input class="note" />
+          <input class="note" />
+          {children}
+        </section>
       </section>
     </li>
   );

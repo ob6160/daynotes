@@ -33,7 +33,7 @@ import Layout from "../layouts/Layout.astro";
   }
 
   h1 {
-    margin: 1rem 0;
+    margin: var(--s-1) 0;
     display: inline-block;
   }
 
@@ -44,7 +44,7 @@ import Layout from "../layouts/Layout.astro";
 
   main {
     margin: auto;
-    padding: 1em;
+    padding: var(--s-1);
     max-width: 60ch;
   }
 
@@ -66,16 +66,16 @@ import Layout from "../layouts/Layout.astro";
   .subtitle {
     line-height: 1.6;
     font-size: large;
-    margin: 1rem 0;
+    margin: var(--s-1) 0;
     background: var(--oxford-blue);
-    padding: 1rem;
+    padding: var(--s-1);
     border-radius: 0.4rem;
     color: var(--color-bg);
   }
 
   .link-card-grid {
     display: grid;
-    gap: 2rem;
+    gap: var(--s2);
     padding: 0;
   }
 </style>
