@@ -1,19 +1,18 @@
-import { h, FunctionComponent } from "preact";
-import { useCallback, useState } from "preact/hooks";
-import "./Day.scss";
+import { FunctionComponent } from 'preact';
+import './Day.scss';
 
 interface Props {
   date: Date;
 }
 
 const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
-  const dayPart = date.toLocaleString("en-gb", { weekday: "long" });
-  const monthPart = date.toLocaleString("en-gb", {
-    month: "long",
-    day: "2-digit",
+  const dayPart = date.toLocaleString('en-gb', { weekday: 'long' });
+  const monthPart = date.toLocaleString('en-gb', {
+    month: 'long',
+    day: '2-digit',
   });
-  const yearPart = date.toLocaleString("en-gb", {
-    year: "numeric",
+  const yearPart = date.toLocaleString('en-gb', {
+    year: 'numeric',
   });
 
   return (
@@ -35,12 +34,19 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
         <Title date={date} />
         <section class="content">
           {inputCount.map(() => (
-            <textarea class="note" placeholder="Write in me!" />
+            <textarea
+              class="note"
+              placeholder="Write in me!"
+            />
           ))}
           {children}
         </section>
         <section class="controls">
-          <button class="add-note">Add note</button>
+          <button class="action"></button>
+          <button class="action">Image</button>
+          <button class="action">Link</button>
+          <button class="action">Book</button>
+          <button class="action">Music</button>
         </section>
       </section>
     </li>
