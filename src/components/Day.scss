@@ -29,9 +29,29 @@
 
   .controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: var(--s-1);
+  }
+
+  button.action {
+    background: none;
+    color: inherit;
+    padding: var(--s-4) var(--s1);
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: var(--s1);
+
+    border: 2px solid black;
+    border-right: 0;
+    &:last-child {
+      border-right: 2px solid black;
+    }
+
+    i {
+      vertical-align: middle;
+    }
   }
 
   textarea.note {

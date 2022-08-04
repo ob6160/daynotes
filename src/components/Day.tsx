@@ -42,11 +42,21 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
           {children}
         </section>
         <section class="controls">
-          <button class="action"></button>
-          <button class="action">Image</button>
-          <button class="action">Link</button>
-          <button class="action">Book</button>
-          <button class="action">Music</button>
+          <button class="action">
+            <i class="fa-regular fa-note-sticky"></i>
+          </button>
+          <button class="action">
+            <i class="fa-solid fa-image"></i>
+          </button>
+          <button class="action">
+            <i class="fa-solid fa-link"></i>
+          </button>
+          <button class="action">
+            <i class="fa-solid fa-book"></i>
+          </button>
+          <button class="action">
+            <i class="fa-solid fa-music"></i>
+          </button>
         </section>
       </section>
     </li>
