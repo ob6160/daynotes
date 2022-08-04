@@ -1,5 +1,5 @@
 import { h, Fragment, FunctionComponent } from "preact";
-import { useMemo } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import "./Day.scss";
 
 interface Props {
@@ -28,12 +28,22 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
 };
 
 const Day: FunctionComponent<Props> = ({ date, children }) => {
+  const entries = useMemo(() => {
+    return [""];
+  }, []);
+
+  const [inputCount, setInputCount] = useState([0]);
+
+  const addNext = useCallback(() => {}, []);
+
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
-          <input class="note" placeholder="What's happening?" />
+          {inputCount.map(() => {
+            return <input class="note" placeholder="What's happening?" />;
+          })}
           {children}
         </section>
       </section>

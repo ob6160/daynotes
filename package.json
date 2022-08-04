@@ -10,8 +10,8 @@
   },
   "devDependencies": {
     "@astrojs/preact": "^0.5.2",
-    "astro": "^1.0.0-rc.3",
-    "sass": "^1.54.1"
+    "astro": "^1.0.0-rc.6",
+    "sass": "^1.54.2"
   },
   "dependencies": {
     "preact": "^10.10.0"
