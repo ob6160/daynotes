@@ -41,6 +41,9 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         placeholder="Write in me!"
         value={content}
       />
+      <button class="approve">
+        <i class="fa-solid fa-check" />
+      </button>
       <button
         class="clear"
         onClick={removeNote}

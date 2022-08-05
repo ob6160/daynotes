@@ -44,6 +44,9 @@ const Link: FunctionComponent<LinkProps> = ({ url, id, date, title }) => {
         placeholder="https://google.com/"
         value={url}
       />
+      <button class="approve">
+        <i class="fa-solid fa-check" />
+      </button>
       <button
         class="clear"
         onClick={removeNote}
