@@ -6,7 +6,7 @@ import './Timeline.scss';
 import { TimelineData, TimelineStore } from '../lib/timelineStore';
 
 const Timeline: FunctionalComponent = () => {
-  const timelineContext = new Map([[new Date(), { notes: [] }]]);
+  const timelineContext = new Map([[new Date(), { notes: {} }]]);
   const state = useState<TimelineData>(timelineContext);
   const timeline = Array.from(state[0].keys()).map((date) => (
     <Day date={date} />

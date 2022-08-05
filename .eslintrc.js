@@ -1,41 +1,42 @@
 // eslint-disable-next-line functional/immutable-data
 module.exports = {
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jsx-a11y/recommended",
-    "plugin:functional/no-mutations",
-    "plugin:astro/recommended",
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:functional/no-mutations',
+    'plugin:astro/recommended',
+    'preact',
   ],
-  plugins: ["functional"],
+  plugins: ['functional'],
   rules: {
-    "react/prop-types": 0,
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "functional/no-let": 0,
-    "functional/prefer-readonly-type": 0,
-    "functional/no-method-signature": 0,
-    "functional/immutable-data": [
-      "error",
+    'react/prop-types': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    'functional/no-let': 0,
+    'functional/prefer-readonly-type': 0,
+    'functional/no-method-signature': 0,
+    'functional/immutable-data': [
+      'error',
       {
         ignoreImmediateMutation: true,
       },
     ],
-    "no-var": "error",
-    "no-param-reassign": "error",
-    "prefer-const": "error",
+    'no-var': 'error',
+    'no-param-reassign': 'error',
+    'prefer-const': 'error',
   },
   overrides: [
     {
       // Define the configuration for `.astro` file.
-      files: ["*.astro"],
+      files: ['*.astro'],
       // Allows Astro components to be parsed.
-      parser: "astro-eslint-parser",
+      parser: 'astro-eslint-parser',
       // Parse the script in `.astro` as TypeScript by adding the following configuration.
       // It's the setting you need when using TypeScript.
       parserOptions: {
-        parser: "@typescript-eslint/parser",
-        extraFileExtensions: [".astro"],
+        parser: '@typescript-eslint/parser',
+        extraFileExtensions: ['.astro'],
       },
       rules: {
         // override/add rules settings here, such as:
@@ -51,7 +52,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
 };

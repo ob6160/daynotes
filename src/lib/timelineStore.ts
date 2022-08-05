@@ -6,7 +6,7 @@ export type Note = {
   content?: string;
 };
 export type Day = {
-  notes: Note[];
+  notes: { [id: string]: Note };
 };
 
 export type TimelineData = Map<Date, Day>;

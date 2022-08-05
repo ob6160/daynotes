@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useContext, useEffect, useState } from 'preact/hooks';
-import './Day.scss';
 import { Note, TimelineStore } from '../lib/timelineStore';
+import './Day.scss';
 
 const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
   const dayPart = date.toLocaleString('en-gb', { weekday: 'long' });
@@ -23,57 +23,83 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
   );
 };
 
-const Note: FunctionComponent<Note> = ({ content }) => {
+type NoteProps = {
+  id: string;
+  date: Date;
+  title?: string;
+  content?: string;
+};
+
+const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
+  const [timeline, setTimeline] = useContext(TimelineStore);
+  const day = timeline.get(date);
+
+  const removeNote = useCallback(() => {
+    // Filter the note out of the id list.
+    const filteredIds = Object.keys(day.notes).filter(
+      (noteId) => noteId !== id,
+    );
+
+    // Construct a new object with the remaining ids.
+    const finalNotes = Object.fromEntries(
+      filteredIds.map((noteId) => [noteId, day.notes[noteId]]),
+    );
+
+    setTimeline(
+      new Map(
+        timeline.set(date, {
+          notes: finalNotes,
+        }),
+      ),
+    );
+  }, [day, setTimeline, id]);
+
   return (
     <section class="note">
       <textarea
         placeholder="Write in me!"
         value={content}
       />
-      <button class="clear">
+      <button
+        class="clear"
+        onClick={removeNote}
+      >
         <i class="fa-solid fa-close"></i>
       </button>
     </section>
   );
 };
 
-interface Props {
+interface DayProps {
   date: Date;
 }
 
-const Day: FunctionComponent<Props> = ({ date, children }) => {
-  // const [notes, setNotes] = useState<Note[]>([]);
-  // const [images, setImages] = useState([]);
-  // const [links, setLinks] = useState([]);
-  // const [books, setBooks] = useState([]);
-  // const [music, setMusic] = useState([]);
-
+const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
-  const [notes, setNotes] = useState(timeline?.get(date)?.notes);
+
+  const day = timeline.get(date);
 
   const addNote = useCallback(() => {
-    setNotes([
-      ...notes,
-      {
-        title: 'Test',
-        content: 'test content...',
-      },
-    ]);
-  }, [notes]);
-
-  useEffect(() => {
-    setTimeline(timeline.set(date, { notes }));
-  }, [notes]);
+    setTimeline(
+      new Map(
+        timeline.set(date, {
+          notes: { ...day.notes, [crypto.randomUUID()]: {} },
+        }),
+      ),
+    );
+  }, [timeline, setTimeline]);
 
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
-          {notes?.map(({ title, content }) => (
+          {Object.entries(day?.notes).map(([id, props]) => (
             <Note
-              title={title}
-              content={content}
+              key={id}
+              id={id}
+              date={date}
+              {...props}
             />
           ))}
           {children}
