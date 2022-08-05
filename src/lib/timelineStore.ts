@@ -4,25 +4,30 @@ import { StateUpdater } from 'preact/hooks';
 export type Note = {
   title?: string;
   content?: string;
+  complete: boolean;
 };
 
 export type Picture = {
   title?: string;
   url: string;
+  complete: boolean;
 };
 
 export type Link = {
   title?: string;
   url: string;
+  complete: boolean;
 };
 
 export type Song = {
   title: string;
   url: string;
+  complete: boolean;
 };
 
 export type Book = {
   title: string;
+  complete: boolean;
 };
 
 export type Mood = 'great' | 'bad' | 'neutral';

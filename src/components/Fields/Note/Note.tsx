@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useContext, useCallback } from 'preact/hooks';
+import { useContext, useCallback, useState } from 'preact/hooks';
 import { TimelineStore } from '../../../lib/timelineStore';
 import './Note.scss';
 
@@ -13,6 +13,20 @@ type NoteProps = {
 const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
   const day = timeline.get(date);
+  const isCompleted = day?.notes[id]?.complete;
+
+  const completeNote = useCallback(() => {
+    const newNote = { ...day.notes[id], complete: true };
+
+    setTimeline(
+      new Map(
+        timeline.set(date, {
+          ...day,
+          notes: { ...day.notes, [id]: newNote },
+        }),
+      ),
+    );
+  }, [date, day, id, setTimeline, timeline]);
 
   const removeNote = useCallback(() => {
     // Filter the note out of the id list.
@@ -35,13 +49,21 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
     );
   }, [day, setTimeline, timeline, date, id]);
 
+  console.log(day?.notes[id]);
+  if (isCompleted) {
+    return <p>{content}</p>;
+  }
+
   return (
     <section class="note">
       <textarea
         placeholder="Write in me!"
         value={content}
       />
-      <button class="approve">
+      <button
+        class="approve"
+        onClick={completeNote}
+      >
         <i class="fa-solid fa-check" />
       </button>
       <button

@@ -17,20 +17,23 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
   const day = timeline.get(date);
 
-  const notes = useMemo(() => Object.entries(day?.notes), [day]);
-  const songs = useMemo(() => Object.entries(day?.songs), [day]);
-  const pictures = useMemo(() => Object.entries(day?.pictures), [day]);
-  const books = useMemo(() => Object.entries(day?.books), [day]);
-  const links = useMemo(() => Object.entries(day?.links), [day]);
+  const notes = useMemo(() => Object.entries(day?.notes), [day.notes]);
+  const songs = useMemo(() => Object.entries(day?.songs), [day.songs]);
+  const pictures = useMemo(() => Object.entries(day?.pictures), [day.pictures]);
+  const books = useMemo(() => Object.entries(day?.books), [day.books]);
+  const links = useMemo(() => Object.entries(day.links), [day.links]);
 
   const addEntry = useCallback(
     (type: EntryType) => {
-      const entries = Object.entries(day?.[type]);
+      const entries = day?.[type];
       setTimeline(
         new Map(
           timeline.set(date, {
             ...day,
-            [type]: { ...entries, [crypto.randomUUID()]: { date } },
+            [type]: {
+              ...entries,
+              [crypto.randomUUID()]: { date, complete: false },
+            },
           }),
         ),
       );
@@ -48,6 +51,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
               key={id}
               id={id}
               date={date}
+              content={'test'}
               {...props}
             />
           ))}
