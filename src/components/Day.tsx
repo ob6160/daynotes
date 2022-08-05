@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useContext, useEffect, useState } from 'preact/hooks';
-import { Note, TimelineStore } from '../lib/timelineStore';
+import { useCallback, useContext } from 'preact/hooks';
+import { TimelineStore } from '../lib/timelineStore';
 import './Day.scss';
 
 const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
@@ -52,7 +52,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         }),
       ),
     );
-  }, [day, setTimeline, id]);
+  }, [day.notes, setTimeline, timeline, date, id]);
 
   return (
     <section class="note">
@@ -64,7 +64,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         class="clear"
         onClick={removeNote}
       >
-        <i class="fa-solid fa-close"></i>
+        <i class="fa-solid fa-close" />
       </button>
     </section>
   );
@@ -87,7 +87,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
         }),
       ),
     );
-  }, [timeline, setTimeline]);
+  }, [setTimeline, timeline, date, day.notes]);
 
   return (
     <li class="day">
@@ -109,19 +109,19 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             class="action"
             onClick={addNote}
           >
-            <i class="fa-solid fa-note-sticky"></i>
+            <i class="fa-solid fa-note-sticky" />
           </button>
           <button class="action">
-            <i class="fa-solid fa-image"></i>
+            <i class="fa-solid fa-image" />
           </button>
           <button class="action">
-            <i class="fa-solid fa-link"></i>
+            <i class="fa-solid fa-link" />
           </button>
           <button class="action">
-            <i class="fa-solid fa-book"></i>
+            <i class="fa-solid fa-book" />
           </button>
           <button class="action">
-            <i class="fa-solid fa-music"></i>
+            <i class="fa-solid fa-music" />
           </button>
         </section>
       </section>
