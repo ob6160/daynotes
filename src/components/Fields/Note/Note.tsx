@@ -15,6 +15,21 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
   const day = timeline.get(date);
   const isCompleted = day?.notes[id]?.complete;
 
+  const updateNoteContent = useCallback(
+    (newContent: string) => {
+      const updatedNote = { ...day.notes[id], content: newContent };
+      setTimeline(
+        new Map(
+          timeline.set(date, {
+            ...day,
+            notes: { ...day.notes, [id]: updatedNote },
+          }),
+        ),
+      );
+    },
+    [date, day, id, setTimeline, timeline],
+  );
+
   const setNoteCompletion = useCallback(
     (complete: boolean) => {
       const completedNote = { ...day.notes[id], complete };
@@ -70,6 +85,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
       <textarea
         placeholder="Write in me!"
         value={content}
+        onInput={(e) => updateNoteContent(e.target?.value)}
       />
       <button
         class="approve"

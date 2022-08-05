@@ -51,7 +51,6 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
               key={id}
               id={id}
               date={date}
-              content={'test'}
               {...props}
             />
           ))}
