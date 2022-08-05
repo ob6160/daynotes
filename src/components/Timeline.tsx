@@ -2,8 +2,8 @@ import 'preact/debug';
 import { FunctionalComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import Day from './Day/Day';
-import './Timeline.scss';
 import { TimelineData, TimelineStore } from '../lib/timelineStore';
+import './Timeline.scss';
 
 const Timeline: FunctionalComponent = () => {
   const timelineContext = new Map([[new Date(), { notes: {} }]]);

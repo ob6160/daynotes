@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useContext, useMemo } from 'preact/hooks';
 import { TimelineStore } from '../../lib/timelineStore';
-import Note from '../Note/Note';
+import Note from '../Fields/Note/Note';
 import Title from './Title';
 import './Day.scss';
 

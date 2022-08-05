@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useContext, useCallback } from 'preact/hooks';
-import { TimelineStore } from '../../lib/timelineStore';
+import { TimelineStore } from '../../../lib/timelineStore';
 import './Note.scss';
 
 type NoteProps = {
