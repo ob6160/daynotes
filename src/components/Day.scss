@@ -29,7 +29,9 @@
 
   .controls {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--s-1, 1rem);
     align-items: center;
     margin-top: var(--s-1);
   }
@@ -37,14 +39,14 @@
   button.action {
     background: none;
     color: inherit;
-    padding: var(--s-4) var(--s1);
+    padding: var(--s-4) var(--s-1);
     font: inherit;
     cursor: pointer;
     outline: inherit;
     font-size: var(--s1);
     border: 2px solid black;
 
-    &:focus {
+    &:is(:focus, :active) {
       outline: var(--s-5) solid var(--oxford-blue);
       outline-offset: var(--s-5);
     }
