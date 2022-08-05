@@ -1,0 +1,11 @@
+.note {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row;
+  align-items: stretch;
+  margin-bottom: var(--s1);
+
+  > textarea {
+    flex-grow: 1;
+  }
+}
