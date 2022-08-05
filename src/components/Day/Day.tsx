@@ -19,17 +19,26 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
     setTimeline(
       new Map(
         timeline.set(date, {
+          mood: day.mood,
           notes: { ...day.notes, [crypto.randomUUID()]: {} },
         }),
       ),
     );
-  }, [setTimeline, timeline, date, day.notes]);
+  }, [setTimeline, timeline, date, day.mood, day.notes]);
 
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
+          {notes.map(([id, props]) => (
+            <Note
+              key={id}
+              id={id}
+              date={date}
+              {...props}
+            />
+          ))}
           {notes.map(([id, props]) => (
             <Note
               key={id}
