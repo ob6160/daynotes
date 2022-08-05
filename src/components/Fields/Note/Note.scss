@@ -5,7 +5,8 @@
   align-items: stretch;
   margin-bottom: var(--s1);
 
-  > textarea {
+  > textarea,
+  p {
     flex-grow: 1;
   }
 }

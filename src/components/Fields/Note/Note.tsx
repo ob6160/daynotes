@@ -15,18 +15,20 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
   const day = timeline.get(date);
   const isCompleted = day?.notes[id]?.complete;
 
-  const completeNote = useCallback(() => {
-    const newNote = { ...day.notes[id], complete: true };
-
-    setTimeline(
-      new Map(
-        timeline.set(date, {
-          ...day,
-          notes: { ...day.notes, [id]: newNote },
-        }),
-      ),
-    );
-  }, [date, day, id, setTimeline, timeline]);
+  const setNoteCompletion = useCallback(
+    (complete: boolean) => {
+      const completedNote = { ...day.notes[id], complete };
+      setTimeline(
+        new Map(
+          timeline.set(date, {
+            ...day,
+            notes: { ...day.notes, [id]: completedNote },
+          }),
+        ),
+      );
+    },
+    [date, day, id, setTimeline, timeline],
+  );
 
   const removeNote = useCallback(() => {
     // Filter the note out of the id list.
@@ -49,9 +51,18 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
     );
   }, [day, setTimeline, timeline, date, id]);
 
-  console.log(day?.notes[id]);
   if (isCompleted) {
-    return <p>{content}</p>;
+    return (
+      <section class="note">
+        <p>{content}</p>
+        <button
+          class="edit"
+          onClick={() => setNoteCompletion(false)}
+        >
+          <i class="fa-solid fa-pencil" />
+        </button>
+      </section>
+    );
   }
 
   return (
@@ -62,7 +73,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
       />
       <button
         class="approve"
-        onClick={completeNote}
+        onClick={() => setNoteCompletion(true)}
       >
         <i class="fa-solid fa-check" />
       </button>
