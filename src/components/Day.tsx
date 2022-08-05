@@ -1,10 +1,7 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import { useCallback, useContext, useEffect, useState } from 'preact/hooks';
 import './Day.scss';
-
-interface Props {
-  date: Date;
-}
+import { Note, TimelineStore } from '../lib/timelineStore';
 
 const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
   const dayPart = date.toLocaleString('en-gb', { weekday: 'long' });
@@ -26,11 +23,6 @@ const Title: FunctionComponent<{ date: Date }> = ({ date }) => {
   );
 };
 
-type Note = {
-  title?: string;
-  content?: string;
-};
-
 const Note: FunctionComponent<Note> = ({ content }) => {
   return (
     <section class="note">
@@ -45,12 +37,20 @@ const Note: FunctionComponent<Note> = ({ content }) => {
   );
 };
 
+interface Props {
+  date: Date;
+}
+
 const Day: FunctionComponent<Props> = ({ date, children }) => {
-  const [notes, setNotes] = useState<Note[]>([]);
+  // const [notes, setNotes] = useState<Note[]>([]);
   // const [images, setImages] = useState([]);
   // const [links, setLinks] = useState([]);
   // const [books, setBooks] = useState([]);
   // const [music, setMusic] = useState([]);
+
+  const [timeline, setTimeline] = useContext(TimelineStore);
+  const [notes, setNotes] = useState(timeline?.get(date)?.notes);
+
   const addNote = useCallback(() => {
     setNotes([
       ...notes,
@@ -61,12 +61,16 @@ const Day: FunctionComponent<Props> = ({ date, children }) => {
     ]);
   }, [notes]);
 
+  useEffect(() => {
+    setTimeline(timeline.set(date, { notes }));
+  }, [notes]);
+
   return (
     <li class="day">
       <section>
         <Title date={date} />
         <section class="content">
-          {notes.map(({ title, content }) => (
+          {notes?.map(({ title, content }) => (
             <Note
               title={title}
               content={content}

@@ -1,32 +1,24 @@
-import Day from "./Day";
-import "./Timeline.scss";
+import 'preact/debug';
+import { FunctionalComponent } from 'preact';
+import { useState } from 'preact/hooks';
+import Day from './Day';
+import './Timeline.scss';
+import { TimelineData, TimelineStore } from '../lib/timelineStore';
 
-const getDaysArray = (start: Date, end: Date): Date[] => {
-  const days: Date[] = [];
-  for (
-    let dt = new Date(end);
-    dt >= new Date(start);
-    dt.setDate(dt.getDate() - 1)
-  ) {
-    days.push(new Date(dt));
-  }
-  return days;
-};
-
-const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
-
-const Timeline = () => {
-  const sevenDaysAgo = new Date(Date.now() - sevenDaysInMs);
-  const currentWeek = getDaysArray(sevenDaysAgo, new Date());
+const Timeline: FunctionalComponent = () => {
+  const timelineContext = new Map([[new Date(), { notes: [] }]]);
+  const state = useState<TimelineData>(timelineContext);
+  const timeline = Array.from(state[0].keys()).map((date) => (
+    <Day date={date} />
+  ));
 
   return (
-    <section class="timeline">
-      <ul class="link-card-grid">
-        {currentWeek.map((date) => {
-          return <Day date={date}></Day>;
-        })}
-      </ul>
-    </section>
+    <TimelineStore.Provider value={state}>
+      <section class="timeline">
+        <ul class="link-card-grid">{timeline}</ul>
+      </section>
+    </TimelineStore.Provider>
   );
 };
+
 export default Timeline;

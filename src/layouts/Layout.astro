@@ -98,8 +98,13 @@ const { title } = Astro.props as Props;
     font-size: var(--s2);
   }
 
+  :global(i) {
+    vertical-align: middle;
+  }
+
   :global(textarea) {
     padding: var(--s-2) var(--s-4);
+    border-radius: 0;
     border: 2px solid black;
     resize: none;
     margin: 0;
@@ -131,8 +136,6 @@ const { title } = Astro.props as Props;
       outline-offset: 0;
     }
 
-    i {
-      vertical-align: middle;
-    }
+
   }
 </style>
