@@ -45,7 +45,7 @@ const { title } = Astro.props as Props;
 </body>
 
 </html>
-<style>
+<style lang="scss">
   :root {
     --black: #000000ff;
     --oxford-blue: #14213dff;
@@ -100,7 +100,39 @@ const { title } = Astro.props as Props;
 
   :global(textarea) {
     padding: var(--s-2) var(--s-4);
-    font-family: var(--vollkorn);
-    border: 4px solid black;
+    border: 2px solid black;
+    resize: none;
+    margin: 0;
+
+    &:is(:focus) {
+      outline: none;
+      border: 4px solid black;
+      margin: -2px;
+      outline-offset: 0;
+    }
+  }
+
+  :global(button) {
+    background: none;
+    color: inherit;
+    padding: var(--s-4) var(--s-1);
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: var(--s1);
+    border: 2px solid black;
+
+    &:is(:focus, :active) {
+      // outline: var(--s-5) solid var(--oxford-blue);
+      // outline-offset: var(--s-5);
+      outline: none;
+      border: 4px solid black;
+      margin: -2px;
+      outline-offset: 0;
+    }
+
+    i {
+      vertical-align: middle;
+    }
   }
 </style>
