@@ -25,13 +25,17 @@ export type Book = {
   title: string;
 };
 
-export type NoteVariants = Book | Song | Picture | Link | Note;
+export type Mood = 'great' | 'bad' | 'neutral';
 
-export type Moods = 'great' | 'bad' | 'neutral';
+export type EntryType = 'notes' | 'pictures' | 'links' | 'songs' | 'books';
 
 export type Day = {
-  mood: Moods;
-  notes: { [id: string]: NoteVariants };
+  mood: Mood;
+  notes: { [id: string]: Note };
+  links: { [id: string]: Link };
+  songs: { [id: string]: Song };
+  pictures: { [id: string]: Picture };
+  books: { [id: string]: Book };
 };
 
 export type TimelineData = Map<Date, Day>;

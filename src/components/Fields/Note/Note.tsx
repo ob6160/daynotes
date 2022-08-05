@@ -28,12 +28,12 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
     setTimeline(
       new Map(
         timeline.set(date, {
-          mood: day.mood,
+          ...day,
           notes: finalNotes,
         }),
       ),
     );
-  }, [day.notes, day.mood, setTimeline, timeline, date, id]);
+  }, [day, setTimeline, timeline, date, id]);
 
   return (
     <section class="note">

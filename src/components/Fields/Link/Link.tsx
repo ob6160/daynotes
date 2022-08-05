@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useContext, useCallback } from 'preact/hooks';
 import { TimelineStore } from '../../../lib/timelineStore';
-import './Note.scss';
 
 type LinkProps = {
   id: string;
@@ -16,24 +15,24 @@ const Link: FunctionComponent<LinkProps> = ({ url, id, date, title }) => {
 
   const removeNote = useCallback(() => {
     // Filter the note out of the id list.
-    const filteredIds = Object.keys(day.notes).filter(
-      (noteId) => noteId !== id,
+    const filteredIds = Object.keys(day.links).filter(
+      (linkId) => linkId !== id,
     );
 
     // Construct a new object with the remaining ids.
-    const finalNotes = Object.fromEntries(
-      filteredIds.map((noteId) => [noteId, day.notes[noteId]]),
+    const finalLinks = Object.fromEntries(
+      filteredIds.map((linkId) => [linkId, day.links[linkId]]),
     );
 
     setTimeline(
       new Map(
         timeline.set(date, {
-          mood: day.mood,
-          notes: finalNotes,
+          ...day,
+          links: finalLinks,
         }),
       ),
     );
-  }, [day.notes, day.mood, setTimeline, timeline, date, id]);
+  }, [day, setTimeline, timeline, date, id]);
 
   return (
     <section class="note">

@@ -2,12 +2,27 @@ import 'preact/debug';
 import { FunctionalComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import Day from './Day/Day';
-import { Moods, TimelineData, TimelineStore } from '../lib/timelineStore';
+import {
+  Day as DayType,
+  Mood,
+  TimelineData,
+  TimelineStore,
+} from '../lib/timelineStore';
 import './Timeline.scss';
 
 const Timeline: FunctionalComponent = () => {
   const timelineContext = new Map([
-    [new Date(), { notes: {}, mood: 'bad' as Moods }],
+    [
+      new Date(),
+      {
+        notes: {},
+        books: {},
+        links: {},
+        pictures: {},
+        songs: {},
+        mood: 'bad' as Mood,
+      } as DayType,
+    ],
   ]);
   const state = useState<TimelineData>(timelineContext);
   const dates = Array.from(state[0].keys());
