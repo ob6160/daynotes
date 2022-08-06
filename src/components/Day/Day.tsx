@@ -10,7 +10,7 @@ import Book from '../Fields/Book/Book';
 import Link from '../Fields/Link/Link';
 
 interface DayProps {
-  date: Date;
+  date: number;
 }
 
 const Day: FunctionComponent<DayProps> = ({ date, children }) => {
@@ -28,7 +28,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
       const entries = day?.[type];
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(date.valueOf(), {
             ...day,
             [type]: {
               ...entries,

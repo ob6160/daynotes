@@ -1,16 +1,17 @@
 import { FunctionComponent } from 'preact';
 
 type TitleProps = {
-  date: Date;
+  date: number;
 };
 
 const Title: FunctionComponent<TitleProps> = ({ date }) => {
-  const dayPart = date.toLocaleString('en-gb', { weekday: 'long' });
-  const monthPart = date.toLocaleString('en-gb', {
+  const castedDate = new Date(date);
+  const dayPart = castedDate.toLocaleString('en-gb', { weekday: 'long' });
+  const monthPart = castedDate.toLocaleString('en-gb', {
     month: 'long',
     day: '2-digit',
   });
-  const yearPart = date.toLocaleString('en-gb', {
+  const yearPart = castedDate.toLocaleString('en-gb', {
     year: 'numeric',
   });
 

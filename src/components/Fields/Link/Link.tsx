@@ -4,7 +4,7 @@ import { TimelineStore } from '../../../lib/timelineStore';
 
 type LinkProps = {
   id: string;
-  date: Date;
+  date: number;
   title?: string;
   url?: string;
 };

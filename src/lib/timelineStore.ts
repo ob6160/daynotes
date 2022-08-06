@@ -43,7 +43,7 @@ export type Day = {
   books: { [id: string]: Book };
 };
 
-export type TimelineData = Map<Date, Day>;
+export type TimelineData = Map<number, Day>;
 
 export const TimelineStore =
   createContext<[TimelineData, StateUpdater<TimelineData>]>(null);

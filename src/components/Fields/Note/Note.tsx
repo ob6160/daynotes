@@ -5,7 +5,7 @@ import './Note.scss';
 
 type NoteProps = {
   id: string;
-  date: Date;
+  date: number;
   title?: string;
   content?: string;
 };
