@@ -66,6 +66,12 @@ const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
   return daysIncludingFirstEntry.sort((a, b) => b - a);
 };
 
+const clearLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.clear();
+  }
+};
+
 const Timeline: FunctionalComponent = () => {
   const initialTimelineState =
     getPersistedState() ??
@@ -111,6 +117,7 @@ const Timeline: FunctionalComponent = () => {
   return (
     <TimelineStore.Provider value={state}>
       <section class="timeline">
+        <button onClick={clearLocalStorage}>Reset</button>
         <ul class="link-card-grid">{timeline}</ul>
       </section>
     </TimelineStore.Provider>
