@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useContext, useCallback, useState } from 'preact/hooks';
+import { useContext, useCallback } from 'preact/hooks';
 import { TimelineStore } from '../../../lib/timelineStore';
 import './Note.scss';
 
@@ -13,6 +13,7 @@ type NoteProps = {
 const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
   const day = timeline.get(date);
+
   const isCompleted = day?.notes[id]?.complete;
 
   const updateNoteContent = useCallback(

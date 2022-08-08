@@ -17,22 +17,42 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
   const day = timeline.get(date);
 
-  const notes = useMemo(() => Object.entries(day?.notes), [day.notes]);
-  const songs = useMemo(() => Object.entries(day?.songs), [day.songs]);
-  const pictures = useMemo(() => Object.entries(day?.pictures), [day.pictures]);
-  const books = useMemo(() => Object.entries(day?.books), [day.books]);
-  const links = useMemo(() => Object.entries(day.links), [day.links]);
+  const notes = useMemo(
+    () => (day?.notes ? Object.entries(day.notes) : []),
+    [day],
+  );
+  const songs = useMemo(
+    () => (day?.songs ? Object.entries(day.songs) : []),
+    [day],
+  );
+  const pictures = useMemo(
+    () => (day?.pictures ? Object.entries(day.pictures) : []),
+    [day],
+  );
+  const books = useMemo(
+    () => (day?.books ? Object.entries(day.books) : []),
+    [day],
+  );
+  const links = useMemo(
+    () => (day?.links ? Object.entries(day.links) : []),
+    [day],
+  );
 
   const addEntry = useCallback(
     (type: EntryType) => {
+      if (day === undefined) {
+        timeline.set(date, {});
+      }
+
       const entries = day?.[type];
+      const entryId = crypto.randomUUID();
       setTimeline(
         new Map(
-          timeline.set(date.valueOf(), {
+          timeline.set(date, {
             ...day,
             [type]: {
               ...entries,
-              [crypto.randomUUID()]: { date, complete: false },
+              [entryId]: { complete: false },
             },
           }),
         ),

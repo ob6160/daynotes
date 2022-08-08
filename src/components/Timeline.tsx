@@ -42,12 +42,36 @@ const mapReviver = (key, value) => {
   return value;
 };
 
+// Returns the timestamp for the start of a given day.
+const dateToEpoch = (date: Date) => {
+  return date.setHours(0, 0, 0, 0).valueOf();
+};
+
+const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
+  const oneDayInMs = 1000 * 60 * 60 * 24;
+  const today = dateToEpoch(new Date());
+
+  const storedDayTimestamps = Array.from(timeline.keys());
+  const earliestStoredDay = Math.min(...storedDayTimestamps);
+
+  const daysIncludingFirstEntry = [];
+  for (
+    let currentDay = earliestStoredDay;
+    currentDay <= today;
+    currentDay += oneDayInMs
+  ) {
+    daysIncludingFirstEntry.push(currentDay);
+  }
+
+  return daysIncludingFirstEntry.sort((a, b) => b - a);
+};
+
 const Timeline: FunctionalComponent = () => {
   const initialTimelineState =
     getPersistedState() ??
     new Map([
       [
-        new Date().valueOf(),
+        dateToEpoch(new Date()),
         {
           notes: {},
           books: {},
@@ -60,22 +84,29 @@ const Timeline: FunctionalComponent = () => {
     ]);
 
   const state = useState<TimelineData>(initialTimelineState);
-  const dates = Array.from(state[0].keys());
-  const timeline = dates.map((date) => (
+
+  // Fill in the gaps, so we render all the days — even if there are no entries.
+  const daysToRender = getDaysIncludingFirstEntry(state[0]);
+
+  const timeline = daysToRender.map((date) => (
     <Day
       key={date}
       date={date}
     />
   ));
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(
-        'state',
-        JSON.stringify(state[0], mapReplacer),
-      );
-    }
-  }, [state]);
+  useEffect(
+    // eslint-disable-next-line prefer-arrow-callback
+    function updateStore() {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(
+          'state',
+          JSON.stringify(state[0], mapReplacer),
+        );
+      }
+    },
+    [state],
+  );
 
   return (
     <TimelineStore.Provider value={state}>
