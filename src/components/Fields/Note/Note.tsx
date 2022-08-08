@@ -69,7 +69,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
 
   if (isCompleted) {
     return (
-      <section class="note">
+      <section class="note complete">
         <p>{content}</p>
         <button
           class="edit"

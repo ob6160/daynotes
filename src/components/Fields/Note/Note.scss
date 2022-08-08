@@ -6,27 +6,36 @@
 
   margin-bottom: var(--s1);
 
+  > textarea,
+  p {
+    flex-grow: 1;
+  }
+
+  &.complete {
+    flex-flow: row;
+    gap: var(--s-1);
+
+    > p {
+      inline-size: min-content;
+      overflow-wrap: anywhere;
+    }
+  }
+
   .buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     flex-flow: row;
     margin-top: var(--s-4);
     gap: var(--s-1);
 
     .approve {
-      background: var(--green);
-      color: white;
-      flex: 1;
+      border-color: var(--green);
+      color: var(--green);
     }
 
     .clear {
-      background: var(--red);
-      color: white;
+      border-color: var(--red);
+      color: var(--red);
     }
-  }
-
-  > textarea,
-  p {
-    flex-grow: 1;
   }
 }
