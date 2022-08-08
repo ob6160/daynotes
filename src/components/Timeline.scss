@@ -2,6 +2,15 @@
   font-family: var(--vollkorn);
   font-size: var(--s1);
 
+  .export-mode {
+    display: flex;
+    flex-direction: column;
+
+    textarea {
+      height: 60ch;
+    }
+  }
+
   .link-card-grid {
     display: grid;
     gap: var(--s2);

@@ -1,6 +1,6 @@
 import 'preact/debug';
 import { FunctionalComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import Day from './Day/Day';
 import {
   Day as DayType,
@@ -66,12 +66,6 @@ const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
   return daysIncludingFirstEntry.sort((a, b) => b - a);
 };
 
-const clearLocalStorage = () => {
-  if (typeof window !== 'undefined') {
-    window.localStorage.clear();
-  }
-};
-
 const Timeline: FunctionalComponent = () => {
   const initialTimelineState =
     getPersistedState() ??
@@ -90,6 +84,7 @@ const Timeline: FunctionalComponent = () => {
     ]);
 
   const state = useState<TimelineData>(initialTimelineState);
+  const stateAsString = JSON.stringify(state[0], mapReplacer);
 
   // Fill in the gaps, so we render all the days — even if there are no entries.
   const daysToRender = getDaysIncludingFirstEntry(state[0]);
@@ -105,19 +100,63 @@ const Timeline: FunctionalComponent = () => {
     // eslint-disable-next-line prefer-arrow-callback
     function updateStore() {
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(
-          'state',
-          JSON.stringify(state[0], mapReplacer),
-        );
+        window.localStorage.setItem('state', stateAsString);
       }
     },
-    [state],
+    [state, stateAsString],
   );
+
+  const [exportMode, setExportMode] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const exportData = useCallback(() => {
+    setExportMode(!exportMode);
+  }, [exportMode]);
+
+  const copyToClipboard = useCallback(() => {
+    navigator.clipboard.writeText(stateAsString);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  }, [stateAsString]);
 
   return (
     <TimelineStore.Provider value={state}>
       <section class="timeline">
-        <button onClick={clearLocalStorage}>Reset</button>
+        <section class="export-mode">
+          <button onClick={exportData}>
+            Export Data&nbsp;
+            {exportMode ? (
+              <i class="fa-solid fa-arrow-down" />
+            ) : (
+              <i class="fa-solid fa-arrow-up" />
+            )}
+          </button>
+
+          {exportMode && (
+            <>
+              <button onClick={copyToClipboard}>
+                {copied === false ? (
+                  <>
+                    Copy&nbsp;
+                    <i class="fa-solid fa-clipboard" />
+                  </>
+                ) : (
+                  <>
+                    Copied&nbsp;
+                    <i class="fa-solid fa-check" />
+                  </>
+                )}
+              </button>
+              <textarea
+                readOnly
+                value={stateAsString}
+              />
+            </>
+          )}
+        </section>
+
         <ul class="link-card-grid">{timeline}</ul>
       </section>
     </TimelineStore.Provider>
