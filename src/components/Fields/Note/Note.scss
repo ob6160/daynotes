@@ -1,9 +1,29 @@
 .note {
   display: flex;
   justify-content: space-around;
-  flex-flow: row;
+  flex-flow: column;
   align-items: stretch;
+
   margin-bottom: var(--s1);
+
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row;
+    margin-top: var(--s-4);
+    gap: var(--s-1);
+
+    .approve {
+      background: var(--green);
+      color: white;
+      flex: 1;
+    }
+
+    .clear {
+      background: var(--red);
+      color: white;
+    }
+  }
 
   > textarea,
   p {

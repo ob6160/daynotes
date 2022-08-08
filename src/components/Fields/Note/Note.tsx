@@ -88,18 +88,20 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         value={content}
         onInput={(e) => updateNoteContent(e.target?.value)}
       />
-      <button
-        class="approve"
-        onClick={() => setNoteCompletion(true)}
-      >
-        <i class="fa-solid fa-check" />
-      </button>
-      <button
-        class="clear"
-        onClick={removeNote}
-      >
-        <i class="fa-solid fa-close" />
-      </button>
+      <section class="buttons">
+        <button
+          class="approve"
+          onClick={() => setNoteCompletion(true)}
+        >
+          <i class="fa-solid fa-check" />
+        </button>
+        <button
+          class="clear"
+          onClick={removeNote}
+        >
+          <i class="fa-solid fa-trash" />
+        </button>
+      </section>
     </section>
   );
 };
