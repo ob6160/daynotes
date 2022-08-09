@@ -2,12 +2,23 @@
   font-family: var(--vollkorn);
   font-size: var(--s1);
 
-  .export-mode {
+  .export,
+  .import {
     display: flex;
     flex-direction: column;
 
     textarea {
-      height: 60ch;
+      height: 20ch;
+    }
+  }
+
+  .export {
+    margin-bottom: var(--s-5);
+  }
+
+  .import {
+    .warning {
+      font-size: var(--s-0);
     }
   }
 

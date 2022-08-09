@@ -1,6 +1,6 @@
 import 'preact/debug';
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import Day from './Day/Day';
 import {
   Day as DayType,
@@ -17,7 +17,12 @@ const getPersistedState = () => {
 
   try {
     const localStorageState = window.localStorage.getItem('state');
-    return JSON.parse(localStorageState, mapReviver);
+
+    const parsed = JSON.parse(localStorageState, mapReviver);
+    if (!(parsed instanceof Map)) {
+      throw 'Invalid data type';
+    }
+    return parsed;
   } catch {
     console.log('Problem parsing localStorage state');
   }
@@ -66,8 +71,8 @@ const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
   return daysIncludingFirstEntry.sort((a, b) => b - a);
 };
 
-const Timeline: FunctionalComponent = () => {
-  const initialTimelineState =
+const getInitialTimelineState = () => {
+  return (
     getPersistedState() ??
     new Map([
       [
@@ -81,9 +86,13 @@ const Timeline: FunctionalComponent = () => {
           mood: 'neutral' as Mood,
         } as DayType,
       ],
-    ]);
+    ])
+  );
+};
 
-  const state = useState<TimelineData>(initialTimelineState);
+const Timeline: FunctionalComponent = () => {
+  const state = useState<TimelineData>(getInitialTimelineState());
+  const setState = state[1];
   const stateAsString = JSON.stringify(state[0], mapReplacer);
 
   // Fill in the gaps, so we render all the days — even if there are no entries.
@@ -107,11 +116,18 @@ const Timeline: FunctionalComponent = () => {
   );
 
   const [exportMode, setExportMode] = useState(false);
+  const [importMode, setImportMode] = useState(false);
+  const [importValue, setImportValue] = useState('');
   const [copied, setCopied] = useState(false);
+  const [imported, setImported] = useState(false);
 
   const exportData = useCallback(() => {
     setExportMode(!exportMode);
   }, [exportMode]);
+
+  const importData = useCallback(() => {
+    setImportMode(!importMode);
+  }, [importMode]);
 
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(stateAsString);
@@ -121,10 +137,20 @@ const Timeline: FunctionalComponent = () => {
     }, 1000);
   }, [stateAsString]);
 
+  const executeImport = useCallback(() => {
+    window.localStorage.setItem('state', importValue);
+    setState(getInitialTimelineState());
+    setImportValue('');
+    setImported(true);
+    setTimeout(() => {
+      setImported(false);
+    }, 1000);
+  }, [importValue, setState]);
+
   return (
     <TimelineStore.Provider value={state}>
       <section class="timeline">
-        <section class="export-mode">
+        <section class="export">
           <button onClick={exportData}>
             Export Data&nbsp;
             {exportMode ? (
@@ -133,7 +159,6 @@ const Timeline: FunctionalComponent = () => {
               <i class="fa-solid fa-arrow-up" />
             )}
           </button>
-
           {exportMode && (
             <>
               <button onClick={copyToClipboard}>
@@ -152,6 +177,40 @@ const Timeline: FunctionalComponent = () => {
               <textarea
                 readOnly
                 value={stateAsString}
+              />
+            </>
+          )}
+        </section>
+        <section class="import">
+          <button onClick={importData}>
+            Import Data&nbsp;
+            {importMode ? (
+              <i class="fa-solid fa-arrow-down" />
+            ) : (
+              <i class="fa-solid fa-arrow-up" />
+            )}
+          </button>
+          {importMode && (
+            <>
+              <button onClick={executeImport}>
+                {imported === false ? (
+                  <>
+                    Import&nbsp;
+                    <i class="fa-solid fa-upload" />
+                    <p class="warning">
+                      (warning — this will overwrite your existing daynotes)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    Imported&nbsp;
+                    <i class="fa-solid fa-check" />
+                  </>
+                )}
+              </button>
+              <textarea
+                onInput={(e) => setImportValue(e.target?.value)}
+                value={importValue}
               />
             </>
           )}
