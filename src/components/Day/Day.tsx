@@ -64,7 +64,6 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
                 {...props}
               />
             ))}
-
             {children}
           </section>
         )}

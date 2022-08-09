@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useContext, useMemo } from 'preact/hooks';
-import { TimelineStore, useTimelineState } from '../../lib/timelineStore';
+import { useMemo } from 'preact/hooks';
+import { useTimelineState } from '../../lib/timelineStore';
 
 import './Title.scss';
 

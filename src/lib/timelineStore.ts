@@ -113,6 +113,8 @@ export const useTimelineState = (date: number) => {
         new Map(
           timeline.set(date, {
             ...day,
+            // We'd like to uncollapse the day, because we're adding a new thing.
+            collapsed: false,
             [type]: {
               ...entries,
               [entryId]: { complete: false },
@@ -121,7 +123,7 @@ export const useTimelineState = (date: number) => {
         ),
       );
     },
-    [setTimeline, timeline, date, day],
+    [day, setTimeline, timeline, date],
   );
 
   const updateNoteContent = useCallback(
