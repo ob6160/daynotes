@@ -36,11 +36,19 @@ const Title: FunctionComponent<TitleProps> = ({ date, hasContent }) => {
         <button
           class="secondary collapse"
           onClick={() => setDayCollapsed(!isCollapsed)}
+          aria-label="Collapse the day content"
+          aria-pressed={!isCollapsed}
         >
           {isCollapsed ? (
-            <i class="fa-solid fa-arrow-up" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-arrow-up"
+            />
           ) : (
-            <i class="fa-solid fa-arrow-down" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-arrow-down"
+            />
           )}
         </button>
       )}

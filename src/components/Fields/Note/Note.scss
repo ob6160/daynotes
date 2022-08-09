@@ -1,41 +1,49 @@
 .note {
   display: flex;
   justify-content: space-around;
-  flex-flow: column;
+  flex-flow: row;
   align-items: stretch;
+  margin-bottom: var(--s-1);
+  gap: var(--s-1);
 
-  margin-bottom: var(--s1);
-
-  > textarea,
-  p {
-    flex-grow: 1;
-  }
-
-  &.complete {
-    flex-flow: row;
+  .editor {
+    display: flex;
+    flex-flow: row wrap;
+    flex: 1;
     gap: var(--s-1);
 
+    > textarea {
+      flex-grow: 8;
+    }
+
     > p {
+      flex-grow: 8;
+      padding: var(--s-2) var(--s-4);
       inline-size: min-content;
       overflow-wrap: anywhere;
     }
-  }
 
-  .buttons {
-    display: flex;
-    justify-content: flex-end;
-    flex-flow: row;
-    margin-top: var(--s-4);
-    gap: var(--s-1);
+    .buttons {
+      display: flex;
+      flex-flow: column wrap;
+      flex: 1;
+      min-width: var(--s4);
+      gap: var(--s-1);
 
-    .approve {
-      border-color: var(--green);
-      color: var(--green);
-    }
+      .edit {
+        border-color: black;
+        color: black;
+      }
 
-    .clear {
-      border-color: var(--red);
-      color: var(--red);
+      .approve {
+        border-color: var(--green);
+        color: var(--green);
+      }
+
+      .clear {
+        border-color: var(--red);
+        color: var(--red);
+      }
     }
   }
 }

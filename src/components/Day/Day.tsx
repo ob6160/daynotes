@@ -72,31 +72,46 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             class="action"
             onClick={() => addEntry('notes')}
           >
-            <i class="fa-solid fa-note-sticky" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-note-sticky"
+            />
           </button>
           <button
             class="action"
             onClick={() => addEntry('pictures')}
           >
-            <i class="fa-solid fa-image" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-image"
+            />
           </button>
           <button
             class="action"
             onClick={() => addEntry('links')}
           >
-            <i class="fa-solid fa-link" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-link"
+            />
           </button>
           <button
             class="action"
             onClick={() => addEntry('books')}
           >
-            <i class="fa-solid fa-book" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-book"
+            />
           </button>
           <button
             class="action"
             onClick={() => addEntry('songs')}
           >
-            <i class="fa-solid fa-music" />
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-music"
+            />
           </button>
         </section>
       </section>

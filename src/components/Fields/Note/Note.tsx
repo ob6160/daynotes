@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import { useMemo } from 'preact/hooks';
 import { useTimelineState } from '../../../lib/timelineStore';
 import './Note.scss';
 
@@ -16,40 +17,56 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
 
   const isCompleted = day?.notes[id]?.complete;
 
-  if (isCompleted) {
-    return (
-      <section class="note complete">
-        <p>{content}</p>
-        <button
-          class="secondary edit"
-          onClick={() => setNoteCompletion(false, id)}
-        >
-          <i class="fa-solid fa-pencil" />
-        </button>
-      </section>
-    );
-  }
-
   return (
     <section class="note">
-      <textarea
-        placeholder="Write in me!"
-        value={content}
-        onInput={(e) => updateNoteContent(e.target?.value, id)}
-      />
-      <section class="buttons">
-        <button
-          class="approve"
-          onClick={() => setNoteCompletion(true, id)}
-        >
-          <i class="fa-solid fa-check" />
-        </button>
-        <button
-          class="clear"
-          onClick={() => removeNote(id)}
-        >
-          <i class="fa-solid fa-trash" />
-        </button>
+      <section class="editor">
+        {isCompleted ? (
+          <p>{content}</p>
+        ) : (
+          <textarea
+            placeholder="Write in me!"
+            value={content}
+            onInput={(e) => updateNoteContent(e.target?.value, id)}
+          />
+        )}
+
+        <section class="buttons">
+          <button
+            class="secondary edit"
+            onClick={() => setNoteCompletion(!isCompleted, id)}
+            aria-label="Edit this note"
+            aria-pressed={!isCompleted}
+          >
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-pencil"
+            />
+          </button>
+          {!isCompleted && (
+            <>
+              <button
+                class="approve"
+                onClick={() => setNoteCompletion(true, id)}
+                aria-label="Save your edits"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa-solid fa-check"
+                />
+              </button>
+              <button
+                class="clear"
+                onClick={() => removeNote(id)}
+                aria-label="Delete this note"
+              >
+                <i
+                  aria-hidden="true"
+                  class="fa-solid fa-trash"
+                />
+              </button>
+            </>
+          )}
+        </section>
       </section>
     </section>
   );
