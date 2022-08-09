@@ -40,15 +40,21 @@ const Title: FunctionComponent<TitleProps> = ({ date, hasContent }) => {
           aria-pressed={!isCollapsed}
         >
           {isCollapsed ? (
-            <i
-              aria-hidden="true"
-              class="fa-solid fa-arrow-up"
-            />
+            <>
+              <span>Show</span>
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-up"
+              />
+            </>
           ) : (
-            <i
-              aria-hidden="true"
-              class="fa-solid fa-arrow-down"
-            />
+            <>
+              <span>Hide</span>
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-down"
+              />
+            </>
           )}
         </button>
       )}
