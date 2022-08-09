@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 import { useTimelineState } from '../../../lib/timelineStore';
 import './Note.scss';
 
@@ -17,6 +17,12 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
 
   const isCompleted = day?.notes[id]?.complete;
 
+  const completeNoteIfPopulated = useCallback(() => {
+    if (content) {
+      setNoteCompletion(true, id);
+    }
+  }, [content, id, setNoteCompletion]);
+
   return (
     <section class="note">
       <section class="editor">
@@ -33,7 +39,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         <section class="buttons">
           <button
             class="secondary edit"
-            onClick={() => setNoteCompletion(!isCompleted, id)}
+            onClick={() => setNoteCompletion(false, id)}
             aria-label="Edit this note"
             aria-pressed={!isCompleted}
           >
@@ -46,7 +52,7 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
             <>
               <button
                 class="approve"
-                onClick={() => setNoteCompletion(true, id)}
+                onClick={completeNoteIfPopulated}
                 aria-label="Save your edits"
               >
                 <i

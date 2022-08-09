@@ -70,6 +70,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
         <section class="controls">
           <button
             class="action"
+            aria-label="Add a note"
             onClick={() => addEntry('notes')}
           >
             <i
@@ -79,6 +80,10 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           </button>
           <button
             class="action"
+            aria-label="Add a picture"
+            aria-disabled="true"
+            disabled={true}
+            title="Disabled, not implemnented yet"
             onClick={() => addEntry('pictures')}
           >
             <i
@@ -88,6 +93,10 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           </button>
           <button
             class="action"
+            aria-disabled="true"
+            disabled={true}
+            aria-label="Add a link"
+            title="Disabled, not implemnented yet"
             onClick={() => addEntry('links')}
           >
             <i
@@ -97,6 +106,10 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           </button>
           <button
             class="action"
+            aria-label="Add a book"
+            aria-disabled="true"
+            disabled={true}
+            title="Disabled, not implemnented yet"
             onClick={() => addEntry('books')}
           >
             <i
@@ -106,6 +119,10 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           </button>
           <button
             class="action"
+            aria-label="Add a song"
+            aria-disabled="true"
+            disabled={true}
+            title="Disabled, not implemnented yet"
             onClick={() => addEntry('songs')}
           >
             <i

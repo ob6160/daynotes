@@ -163,5 +163,10 @@ const { title } = Astro.props as Props;
       margin: -2px;
       outline-offset: 0;
     }
+
+    &:is(:disabled) {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 </style>

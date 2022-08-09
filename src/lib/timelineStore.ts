@@ -106,7 +106,6 @@ export const useTimelineState = (date: number) => {
       if (day === undefined) {
         timeline.set(date, {});
       }
-
       const entries = day?.[type];
       const entryId = crypto.randomUUID();
       setTimeline(
@@ -143,7 +142,8 @@ export const useTimelineState = (date: number) => {
 
   const setNoteCompletion = useCallback(
     (complete: boolean, noteId: string) => {
-      const completedNote = { ...day.notes[noteId], complete };
+      const note = day.notes[noteId];
+      const completedNote = { ...note, complete };
       setTimeline(
         new Map(
           timeline.set(date, {
