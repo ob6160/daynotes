@@ -35,12 +35,13 @@ export type Mood = 'great' | 'bad' | 'neutral';
 export type EntryType = 'notes' | 'pictures' | 'links' | 'songs' | 'books';
 
 export type Day = {
-  mood: Mood;
-  notes: { [id: string]: Note };
-  links: { [id: string]: Link };
-  songs: { [id: string]: Song };
-  pictures: { [id: string]: Picture };
-  books: { [id: string]: Book };
+  mood?: Mood;
+  collapsed?: boolean;
+  notes?: { [id: string]: Note };
+  links?: { [id: string]: Link };
+  songs?: { [id: string]: Song };
+  pictures?: { [id: string]: Picture };
+  books?: { [id: string]: Book };
 };
 
 type DayTimestamp = number;

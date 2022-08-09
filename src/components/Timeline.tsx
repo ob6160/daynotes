@@ -28,7 +28,7 @@ const getPersistedState = () => {
   }
 };
 
-const mapReplacer = (key, value) => {
+const mapReplacer = (_key, value: unknown) => {
   if (value instanceof Map) {
     return {
       dataType: 'Map',
@@ -38,10 +38,12 @@ const mapReplacer = (key, value) => {
   return value;
 };
 
-const mapReviver = (key, value) => {
+// TODO: use zod to verify that the data type is as-expected.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapReviver = (_key, value: any) => {
   if (typeof value === 'object' && value !== null) {
     if (value.dataType === 'Map') {
-      return new Map(value.value);
+      return new Map(value?.value);
     }
   }
   return value;

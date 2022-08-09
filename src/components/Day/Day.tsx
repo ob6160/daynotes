@@ -17,6 +17,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const [timeline, setTimeline] = useContext(TimelineStore);
   const day = timeline.get(date);
 
+  const showContent = useMemo(() => !day?.collapsed, [day]);
   const notes = useMemo(
     () => (day?.notes ? Object.entries(day.notes) : []),
     [day],
@@ -65,44 +66,46 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
     <li class="day">
       <section>
         <Title date={date} />
-        <section class="content">
-          {notes.map(([id, props]) => (
-            <Note
-              key={id}
-              id={id}
-              date={date}
-              {...props}
-            />
-          ))}
-          {songs.map(([id, props]) => (
-            <Song
-              key={id}
-              {...props}
-            />
-          ))}
-          {pictures.map(([id, props]) => (
-            <Picture
-              key={id}
-              {...props}
-            />
-          ))}
-          {books.map(([id, props]) => (
-            <Book
-              key={id}
-              {...props}
-            />
-          ))}
-          {links.map(([id, props]) => (
-            <Link
-              key={id}
-              id={id}
-              date={date}
-              {...props}
-            />
-          ))}
+        {showContent && (
+          <section class="content">
+            {notes.map(([id, props]) => (
+              <Note
+                key={id}
+                id={id}
+                date={date}
+                {...props}
+              />
+            ))}
+            {songs.map(([id, props]) => (
+              <Song
+                key={id}
+                {...props}
+              />
+            ))}
+            {pictures.map(([id, props]) => (
+              <Picture
+                key={id}
+                {...props}
+              />
+            ))}
+            {books.map(([id, props]) => (
+              <Book
+                key={id}
+                {...props}
+              />
+            ))}
+            {links.map(([id, props]) => (
+              <Link
+                key={id}
+                id={id}
+                date={date}
+                {...props}
+              />
+            ))}
 
-          {children}
-        </section>
+            {children}
+          </section>
+        )}
         <section class="controls">
           <button
             class="action"
