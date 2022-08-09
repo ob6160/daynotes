@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useContext, useMemo } from 'preact/hooks';
-import { EntryType, TimelineStore } from '../../lib/timelineStore';
+import { useMemo } from 'preact/hooks';
+import { useTimelineState } from '../../lib/timelineStore';
 import Note from '../Fields/Note/Note';
 import Title from './Title';
 import './Day.scss';
@@ -14,58 +14,20 @@ interface DayProps {
 }
 
 const Day: FunctionComponent<DayProps> = ({ date, children }) => {
-  const [timeline, setTimeline] = useContext(TimelineStore);
-  const day = timeline.get(date);
+  const { state, mutations, helpers } = useTimelineState(date);
+  const { notes, songs, books, links, pictures, day } = state;
+  const { hasContent } = helpers;
+  const { addEntry } = mutations;
 
   const showContent = useMemo(() => !day?.collapsed, [day]);
-  const notes = useMemo(
-    () => (day?.notes ? Object.entries(day.notes) : []),
-    [day],
-  );
-  const songs = useMemo(
-    () => (day?.songs ? Object.entries(day.songs) : []),
-    [day],
-  );
-  const pictures = useMemo(
-    () => (day?.pictures ? Object.entries(day.pictures) : []),
-    [day],
-  );
-  const books = useMemo(
-    () => (day?.books ? Object.entries(day.books) : []),
-    [day],
-  );
-  const links = useMemo(
-    () => (day?.links ? Object.entries(day.links) : []),
-    [day],
-  );
-
-  const addEntry = useCallback(
-    (type: EntryType) => {
-      if (day === undefined) {
-        timeline.set(date, {});
-      }
-
-      const entries = day?.[type];
-      const entryId = crypto.randomUUID();
-      setTimeline(
-        new Map(
-          timeline.set(date, {
-            ...day,
-            [type]: {
-              ...entries,
-              [entryId]: { complete: false },
-            },
-          }),
-        ),
-      );
-    },
-    [setTimeline, timeline, date, day],
-  );
 
   return (
     <li class="day">
       <section>
-        <Title date={date} />
+        <Title
+          date={date}
+          hasContent={hasContent}
+        />
         {showContent && (
           <section class="content">
             {notes.map(([id, props]) => (
