@@ -158,26 +158,46 @@ const Timeline: FunctionalComponent = () => {
     <TimelineStore.Provider value={state}>
       <section class="timeline">
         <section class="export">
-          <button onClick={exportData}>
+          <button
+            aria-label="Export your data"
+            aria-pressed={exportMode}
+            onClick={exportData}
+          >
             Export Data&nbsp;
             {exportMode ? (
-              <i class="fa-solid fa-arrow-down" />
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-down"
+              />
             ) : (
-              <i class="fa-solid fa-arrow-up" />
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-up"
+              />
             )}
           </button>
           {exportMode && (
             <>
-              <button onClick={copyToClipboard}>
+              <button
+                aria-label="Copy your note data as JSON to the clipboard"
+                aria-pressed={copied}
+                onClick={copyToClipboard}
+              >
                 {copied === false ? (
                   <>
                     Copy&nbsp;
-                    <i class="fa-solid fa-clipboard" />
+                    <i
+                      aria-hidden="true"
+                      class="fa-solid fa-clipboard"
+                    />
                   </>
                 ) : (
                   <>
                     Copied&nbsp;
-                    <i class="fa-solid fa-check" />
+                    <i
+                      aria-hidden="true"
+                      class="fa-solid fa-check"
+                    />
                   </>
                 )}
               </button>
@@ -189,21 +209,38 @@ const Timeline: FunctionalComponent = () => {
           )}
         </section>
         <section class="import">
-          <button onClick={importData}>
+          <button
+            aria-label="Import your data as JSON"
+            aria-pressed={importMode}
+            onClick={importData}
+          >
             Import Data&nbsp;
             {importMode ? (
-              <i class="fa-solid fa-arrow-down" />
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-down"
+              />
             ) : (
-              <i class="fa-solid fa-arrow-up" />
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-arrow-up"
+              />
             )}
           </button>
           {importMode && (
             <>
-              <button onClick={executeImport}>
+              <button
+                aria-label="Import the JSON data copied into the text box below. Warning — this will overwrite your existing daynotes"
+                aria-pressed={imported}
+                onClick={executeImport}
+              >
                 {imported === false ? (
                   <>
                     Import&nbsp;
-                    <i class="fa-solid fa-upload" />
+                    <i
+                      aria-hidden="true"
+                      class="fa-solid fa-upload"
+                    />
                     <p class="warning">
                       (warning — this will overwrite your existing daynotes)
                     </p>
@@ -211,7 +248,10 @@ const Timeline: FunctionalComponent = () => {
                 ) : (
                   <>
                     Imported&nbsp;
-                    <i class="fa-solid fa-check" />
+                    <i
+                      aria-hidden="true"
+                      class="fa-solid fa-check"
+                    />
                   </>
                 )}
               </button>
