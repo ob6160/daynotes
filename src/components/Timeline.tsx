@@ -138,13 +138,18 @@ const Timeline: FunctionalComponent = () => {
   }, [stateAsString]);
 
   const executeImport = useCallback(() => {
-    window.localStorage.setItem('state', importValue);
-    setState(getInitialTimelineState());
-    setImportValue('');
-    setImported(true);
-    setTimeout(() => {
-      setImported(false);
-    }, 1000);
+    const areYouSure = window.confirm(
+      "Are you sure? If you proceed, you'll replace all your notes.",
+    );
+    if (importValue !== '' && areYouSure) {
+      window.localStorage.setItem('state', importValue);
+      setState(getInitialTimelineState());
+      setImportValue('');
+      setImported(true);
+      setTimeout(() => {
+        setImported(false);
+      }, 1000);
+    }
   }, [importValue, setState]);
 
   return (
