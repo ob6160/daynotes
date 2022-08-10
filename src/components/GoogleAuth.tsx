@@ -1,4 +1,3 @@
-import 'preact/compat';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
 

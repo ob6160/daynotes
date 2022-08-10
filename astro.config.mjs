@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 // https://astro.build/config
 export default defineConfig({
   // Enable Preact to support Preact JSX components.
-  integrations: [preact({ compat: true })],
+  integrations: [preact({ compat: false })],
   // Enable SSR on Vercel.
   output: 'server',
   adapter: vercel(),
