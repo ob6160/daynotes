@@ -1,8 +1,14 @@
 ---
-import Layout from "./Layout.astro";
+import RootLayout from "./RootLayout.astro";
+
+export interface Props {
+  pageTitle?: string;
+}
+
+const { pageTitle } = Astro.props as Props;
 ---
 
-<Layout title="daynot.es">
+<RootLayout title="daynot.es">
   <main>
     <section class="title">
       <section class="logo">
@@ -17,10 +23,13 @@ import Layout from "./Layout.astro";
         <a href="/about">About</a>
         <a href="/source">Source code</a>
       </section>
+      <section class="subtitle">
+        <h2>{pageTitle}</h2>
+      </section>
     </section>
     <slot />
   </main>
-</Layout>
+</RootLayout>
 
 <style lang="scss">
   h1 {
@@ -35,8 +44,13 @@ import Layout from "./Layout.astro";
 
   main {
     margin: auto;
-    padding: var(--s-1);
-    max-width: 80ch;
+    padding: var(--s0);
+    font-size: var(--s1);
+    max-width: 60ch;
+    border-left: 4px dashed;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
   }
 
   hr {
@@ -53,6 +67,7 @@ import Layout from "./Layout.astro";
   .links {
     display: flex;
     font-size: var(--s1);
+    flex-flow: row wrap;
     gap: var(--s-1);
 
     a {
@@ -63,6 +78,10 @@ import Layout from "./Layout.astro";
         margin-bottom: -3px;
       }
     }
+  }
+
+  .subtitle {
+    margin-top: var(--s-1);
   }
 
   .text-gradient {
