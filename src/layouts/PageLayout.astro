@@ -47,10 +47,14 @@ const { pageTitle } = Astro.props as Props;
     padding: var(--s0);
     font-size: var(--s1);
     max-width: 60ch;
-    border-left: 4px dashed;
     display: flex;
     flex-flow: column;
-    height: 100%;
+    min-height: 100%;
+    border-left: 4px dashed;
+
+    @media only screen and (max-device-width: 480px) {
+      border-left: none;
+    }
   }
 
   hr {
