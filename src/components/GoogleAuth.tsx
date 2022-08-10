@@ -1,5 +1,10 @@
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import {
+  GoogleLogin,
+  GoogleOAuthProvider,
+  useGoogleLogin,
+} from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 
 interface GoogleAuthProps {
   googleClientId: string;
@@ -13,6 +18,7 @@ const GoogleAuth: FunctionalComponent<GoogleAuthProps> = ({
       <GoogleLogin
         theme="filled_black"
         width="100"
+        login_uri="/oauth2/callback"
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
         }}
