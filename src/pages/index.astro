@@ -14,7 +14,7 @@ const googleOauthClientId = import.meta.env.GOOGLE_OAUTH_CLIENT_ID;
     <summary>
       Google cloud sync is in development and won't work yet!
     </summary>
-    <GoogleAuth client:visible googleClientId={googleOauthClientId} />
+    <GoogleAuth client:only="preact" client:visible googleClientId={googleOauthClientId} />
   </details>
   <Timeline client:idle />
 </PageLayout>
