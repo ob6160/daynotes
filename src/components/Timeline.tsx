@@ -1,4 +1,3 @@
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import Day from './Day/Day';
@@ -13,10 +12,9 @@ import './Timeline.scss';
 
 type TimelineProps = {
   backupMode?: boolean;
-  googleClientId: string;
 };
 
-const Timeline: FunctionalComponent<TimelineProps> = ({ googleClientId }) => {
+const Timeline: FunctionalComponent<TimelineProps> = () => {
   const state = useState<TimelineData>(getInitialTimelineState());
   const stateAsString = JSON.stringify(state[0], mapReplacer);
 
@@ -41,29 +39,11 @@ const Timeline: FunctionalComponent<TimelineProps> = ({ googleClientId }) => {
   );
 
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <TimelineStore.Provider value={state}>
-        <details>
-          <summary>
-            Google cloud sync is in development and won't work yet!
-          </summary>
-
-          <GoogleLogin
-            theme="filled_black"
-            width="100"
-            onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-          />
-        </details>
-        <section class="timeline">
-          <ul class="link-card-grid">{timeline}</ul>
-        </section>
-      </TimelineStore.Provider>
-    </GoogleOAuthProvider>
+    <TimelineStore.Provider value={state}>
+      <section class="timeline">
+        <ul class="link-card-grid">{timeline}</ul>
+      </section>
+    </TimelineStore.Provider>
   );
 };
 
