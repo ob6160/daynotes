@@ -10,7 +10,12 @@ const googleOauthClientId = import.meta.env.GOOGLE_OAUTH_CLIENT_ID;
   <h2 class="subtitle">
     Keep track of the small things. They're worth remembering.
   </h2>
-  <GoogleAuth client:only="preact" googleClientId={googleOauthClientId} />
+  <details>
+    <summary>
+      Google cloud sync is in development and won't work yet!
+    </summary>
+    <GoogleAuth client:visible googleClientId={googleOauthClientId} />
+  </details>
   <Timeline client:idle />
 </PageLayout>
 

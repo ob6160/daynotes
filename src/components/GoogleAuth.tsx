@@ -10,22 +10,16 @@ const GoogleAuth: FunctionalComponent<GoogleAuthProps> = ({
 }) => {
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <details>
-        <summary>
-          Google cloud sync is in development and won't work yet!
-        </summary>
-
-        <GoogleLogin
-          theme="filled_black"
-          width="100"
-          onSuccess={(credentialResponse) => {
-            console.log(credentialResponse);
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-        />
-      </details>
+      <GoogleLogin
+        theme="filled_black"
+        width="100"
+        onSuccess={(credentialResponse) => {
+          console.log(credentialResponse);
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+      />
     </GoogleOAuthProvider>
   );
 };
