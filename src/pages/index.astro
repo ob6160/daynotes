@@ -2,13 +2,14 @@
 import Timeline from "../components/Timeline";
 import PageLayout from "../layouts/PageLayout.astro";
 
+const googleOauthClientId = import.meta.env.GOOGLE_OAUTH_CLIENT_ID;
 ---
 
 <PageLayout>
   <h2 class="subtitle">
     Keep track of the small things. They're worth remembering.
   </h2>
-  <Timeline client:idle />
+  <Timeline googleClientId={googleOauthClientId} client:idle />
 </PageLayout>
 
 <style>

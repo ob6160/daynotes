@@ -38,7 +38,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
                 {...props}
               />
             ))}
-            {songs.map(([id, props]) => (
+            {/* {songs.map(([id, props]) => (
               <Song
                 key={id}
                 {...props}
@@ -63,7 +63,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
                 date={date}
                 {...props}
               />
-            ))}
+            ))} */}
             {children}
           </section>
         )}

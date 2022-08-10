@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import { useTimelineState } from '../../../lib/timelineStore';
 import './Note.scss';
 
