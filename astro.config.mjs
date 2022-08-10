@@ -14,9 +14,6 @@ export default defineConfig({
   // Enable SSR on Vercel.
   output: 'server',
   adapter: vercel(),
-  server: {
-    port: 8861,
-  },
   // Custom vite configuration.
   vite: {
     ssr: {
