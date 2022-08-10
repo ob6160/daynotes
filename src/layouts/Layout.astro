@@ -105,6 +105,12 @@ const { title } = Astro.props as Props;
     vertical-align: middle;
   }
 
+  :global(a) {
+    &:is(:focus) {
+      outline: 4px solid black;
+    }
+  }
+
   :global(textarea) {
     padding: var(--s-2) var(--s-4);
     border-radius: 0;

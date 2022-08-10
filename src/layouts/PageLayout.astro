@@ -1,0 +1,72 @@
+---
+import Layout from "./Layout.astro";
+---
+
+<Layout title="daynot.es">
+  <main>
+    <section class="title">
+      <section class="logo">
+        <a href="/">
+          <h1 aria-label="Daynotes">day<span class="text-gradient">not.es</span></h1>
+        </a>
+      </section>
+      <section class="links">
+        <a href="/">Your Notes</a>
+        <a href="/backup">Backup/Restore</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/about">About</a>
+        <a href="/source">Source code</a>
+      </section>
+    </section>
+    <slot />
+  </main>
+</Layout>
+
+<style lang="scss">
+  h1 {
+    margin: var(--s-1) 0;
+    display: inline-block;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  main {
+    margin: auto;
+    padding: var(--s-1);
+    max-width: 80ch;
+  }
+
+  hr {
+    border: 0;
+    border-top: 4px solid black;
+  }
+
+  .title {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+  }
+
+  .links {
+    display: flex;
+    font-size: var(--s1);
+    gap: var(--s-1);
+
+    a {
+      border-bottom: 1px solid black;
+
+      &:is(:hover, :focus) {
+        border-bottom: 4px solid black;
+        margin-bottom: -3px;
+      }
+    }
+  }
+
+  .text-gradient {
+    font-weight: 900;
+    color: var(--dark-pink);
+  }
+</style>

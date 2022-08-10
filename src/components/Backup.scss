@@ -1,0 +1,24 @@
+.backup {
+  font-family: var(--source-serif-pro);
+  font-size: var(--s1);
+
+  .export,
+  .import {
+    display: flex;
+    flex-direction: column;
+
+    textarea {
+      height: 20ch;
+    }
+  }
+
+  .export {
+    margin-bottom: var(--s-5);
+  }
+
+  .import {
+    .warning {
+      font-size: var(--s-0);
+    }
+  }
+}
