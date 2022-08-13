@@ -5,6 +5,12 @@ import {
 } from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
 import { useCallback } from 'preact/hooks';
+import { useStore } from '@nanostores/preact';
+import {
+  dateToEpoch,
+  mapReplacer,
+  sharedTimelineState,
+} from '../lib/timelineStore';
 
 const constructBackupUploadBody = (json: string, timestamp?: number) => {
   const fileName = timestamp
@@ -25,6 +31,8 @@ ${json}
 };
 
 const GoogleLogin = () => {
+  const $timelineState = useStore(sharedTimelineState);
+  const stateAsString = JSON.stringify($timelineState, mapReplacer);
   const googleLoginSuccessHandler = useCallback(
     async (
       tokenResponse: Omit<
@@ -40,7 +48,10 @@ const GoogleLogin = () => {
             Authorization: `Bearer ${tokenResponse.access_token}`,
             'Content-Type': 'multipart/related;boundary=--',
           },
-          body: constructBackupUploadBody('{test: "json"}'),
+          body: constructBackupUploadBody(
+            stateAsString,
+            dateToEpoch(new Date()),
+          ),
         },
       );
 

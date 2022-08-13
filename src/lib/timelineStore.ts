@@ -1,4 +1,4 @@
-import { WritableAtom } from 'nanostores';
+import { atom, WritableAtom } from 'nanostores';
 import { createContext } from 'preact';
 import { useCallback, useContext, useMemo } from 'preact/hooks';
 
@@ -51,65 +51,9 @@ export type TimelineData = Map<DayTimestamp, Day>;
 
 export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 
-export const getInitialTimelineState = () => {
-  return (
-    getPersistedState() ??
-    new Map([
-      [
-        dateToEpoch(new Date()),
-        {
-          notes: {},
-          books: {},
-          links: {},
-          pictures: {},
-          songs: {},
-          mood: 'neutral' as Mood,
-        } as Day,
-      ],
-    ])
-  );
-};
-
-export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
-  const oneDayInMs = 1000 * 60 * 60 * 24;
-  const today = dateToEpoch(new Date());
-
-  const storedDayTimestamps = Array.from(timeline.keys());
-  const earliestStoredDay = Math.min(...storedDayTimestamps);
-
-  const daysIncludingFirstEntry = [];
-  for (
-    let currentDay = earliestStoredDay;
-    currentDay <= today;
-    currentDay += oneDayInMs
-  ) {
-    daysIncludingFirstEntry.push(currentDay);
-  }
-
-  return daysIncludingFirstEntry.sort((a, b) => b - a);
-};
-
 // Returns the timestamp for the start of a given day.
 export const dateToEpoch = (date: Date) => {
   return date.setHours(0, 0, 0, 0).valueOf();
-};
-
-const getPersistedState = () => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  try {
-    const localStorageState = window.localStorage.getItem('state');
-
-    const parsed = JSON.parse(localStorageState, mapReviver);
-    if (!(parsed instanceof Map)) {
-      throw 'Invalid data type';
-    }
-    return parsed;
-  } catch {
-    console.log('Problem parsing localStorage state');
-  }
 };
 
 export const mapReplacer = (_key, value: unknown) => {
@@ -131,6 +75,66 @@ const mapReviver = (_key, value: any) => {
     }
   }
   return value;
+};
+
+const getPersistedState = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    const localStorageState = window.localStorage.getItem('state');
+
+    const parsed = JSON.parse(localStorageState, mapReviver);
+    if (!(parsed instanceof Map)) {
+      throw 'Invalid data type';
+    }
+    return parsed;
+  } catch {
+    console.log('Problem parsing localStorage state');
+  }
+};
+
+export const getInitialTimelineState = () => {
+  return (
+    getPersistedState() ??
+    new Map([
+      [
+        dateToEpoch(new Date()),
+        {
+          notes: {},
+          books: {},
+          links: {},
+          pictures: {},
+          songs: {},
+          mood: 'neutral' as Mood,
+        } as Day,
+      ],
+    ])
+  );
+};
+
+export const sharedTimelineState = atom<TimelineData>(
+  getInitialTimelineState(),
+);
+
+export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
+  const oneDayInMs = 1000 * 60 * 60 * 24;
+  const today = dateToEpoch(new Date());
+
+  const storedDayTimestamps = Array.from(timeline.keys());
+  const earliestStoredDay = Math.min(...storedDayTimestamps);
+
+  const daysIncludingFirstEntry = [];
+  for (
+    let currentDay = earliestStoredDay;
+    currentDay <= today;
+    currentDay += oneDayInMs
+  ) {
+    daysIncludingFirstEntry.push(currentDay);
+  }
+
+  return daysIncludingFirstEntry.sort((a, b) => b - a);
 };
 
 // Mega massive hook, but it's a good enough solution for now :-)

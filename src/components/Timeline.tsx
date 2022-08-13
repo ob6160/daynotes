@@ -1,25 +1,21 @@
 import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
+import { useStore } from '@nanostores/preact';
 import Day from './Day/Day';
 import {
   getDaysIncludingFirstEntry,
-  getInitialTimelineState,
   mapReplacer,
-  TimelineData,
+  sharedTimelineState,
   TimelineStore,
 } from '../lib/timelineStore';
 import './Timeline.scss';
-import { atom } from 'nanostores';
-import { useStore } from '@nanostores/preact';
 
 type TimelineProps = {
   backupMode?: boolean;
 };
 
-const timelineState = atom<TimelineData>(getInitialTimelineState());
-
 const Timeline: FunctionalComponent<TimelineProps> = () => {
-  const $timelineState = useStore(timelineState);
+  const $timelineState = useStore(sharedTimelineState);
   const stateAsString = JSON.stringify($timelineState, mapReplacer);
 
   // Fill in the gaps, so we render all the days — even if there are no entries.
@@ -43,7 +39,7 @@ const Timeline: FunctionalComponent<TimelineProps> = () => {
   );
 
   return (
-    <TimelineStore.Provider value={timelineState}>
+    <TimelineStore.Provider value={sharedTimelineState}>
       <section class="timeline">
         <ul class="link-card-grid">{timeline}</ul>
       </section>
