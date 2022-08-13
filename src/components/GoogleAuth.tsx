@@ -12,27 +12,47 @@ import {
   sharedTimelineState,
 } from '../lib/timelineStore';
 
-const constructBackupUploadBody = (json: string, timestamp?: number) => {
+const constructBackupUploadBody = (content: string, timestamp?: number) => {
   const fileName = timestamp
     ? `daynotes_sync_${timestamp}.json`
     : `daynotes_sync.json`;
+
+  const metadata = JSON.stringify({
+    description: 'Synchronised data from daynotes',
+    name: fileName,
+    mimeType: 'application/json',
+    properties: {
+      type: 'daynotes_backup',
+    },
+  });
 
   return `
 ----
 Content-Type: application/json; charset=UTF-8
 
-{"description":"Synchronised data from daynotes","name":"${fileName}"}
+${metadata}
 ----
 Content-Transfer-Encoding: BINARY
 
-${json}
+${content}
 ------
   `;
+};
+
+const listSyncFiles = (accessToken: string) => {
+  const searchQuery = 'title:daynotes_sync';
+  return fetch(`https://www.googleapis.com/drive/v3/files?q=${searchQuery}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 };
 
 const GoogleLogin = () => {
   const $timelineState = useStore(sharedTimelineState);
   const stateAsString = JSON.stringify($timelineState, mapReplacer);
+
   const googleLoginSuccessHandler = useCallback(
     async (
       tokenResponse: Omit<
@@ -41,7 +61,7 @@ const GoogleLogin = () => {
       >,
     ) => {
       const uploadRequest = await fetch(
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&includeLabels=daynotes_backup',
         {
           method: 'POST',
           headers: {
@@ -56,8 +76,9 @@ const GoogleLogin = () => {
       );
 
       console.log(await uploadRequest.text());
+      console.log(await listSyncFiles(tokenResponse.access_token));
     },
-    [],
+    [stateAsString],
   );
 
   const initiateGoogleLogin = useGoogleLogin({
