@@ -27,8 +27,10 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^1.0.0",
+    "@nanostores/preact": "^0.2.1",
     "@react-oauth/google": "^0.2.6",
     "modern-css-reset": "^1.4.0",
+    "nanostores": "^0.6.0",
     "preact": "^10.10.2",
     "react": "npm:@preact/compat",
     "react-dom": "npm:@preact/compat",
