@@ -1,40 +1,76 @@
 import {
-  GoogleLogin,
+  TokenResponse,
   GoogleOAuthProvider,
   useGoogleLogin,
 } from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
+import { useCallback } from 'preact/hooks';
+
+const constructBackupUploadBody = (json: string, timestamp?: number) => {
+  const fileName = timestamp
+    ? `daynotes_sync_${timestamp}.json`
+    : `daynotes_sync.json`;
+
+  return `
+----
+Content-Type: application/json; charset=UTF-8
+
+{"description":"Synchronised data from daynotes","name":"${fileName}"}
+----
+Content-Transfer-Encoding: BINARY
+
+${json}
+------
+  `;
+};
+
+const GoogleLogin = () => {
+  const googleLoginSuccessHandler = useCallback(
+    async (
+      tokenResponse: Omit<
+        TokenResponse,
+        'error' | 'error_description' | 'error_uri'
+      >,
+    ) => {
+      const uploadRequest = await fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${tokenResponse.access_token}`,
+            'Content-Type': 'multipart/related;boundary=--',
+          },
+          body: constructBackupUploadBody('{test: "json"}'),
+        },
+      );
+
+      console.log(await uploadRequest.text());
+    },
+    [],
+  );
+
+  const initiateGoogleLogin = useGoogleLogin({
+    scope: 'https://www.googleapis.com/auth/drive',
+    onSuccess: googleLoginSuccessHandler,
+  });
+
+  const googleLoginClickHandler = useCallback(() => {
+    return initiateGoogleLogin();
+  }, [initiateGoogleLogin]);
+
+  return <button onClick={googleLoginClickHandler}>test</button>;
+};
 
 interface GoogleAuthProps {
   googleClientId: string;
 }
-
-const LoginThing = () => {
-  const googleLogin = useGoogleLogin({
-    scope: 'https://www.googleapis.com/auth/drive',
-    onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      // fetching userinfo can be done on the client or the server
-      const userInfo = await fetch(
-        'https://www.googleapis.com/drive/v3/about?fields=*',
-        {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        },
-      );
-
-      console.log(await userInfo.text());
-    },
-  });
-
-  return <button onClick={() => googleLogin()}>test</button>;
-};
 
 const GoogleAuth: FunctionalComponent<GoogleAuthProps> = ({
   googleClientId,
 }) => {
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <LoginThing />
+      <GoogleLogin />
     </GoogleOAuthProvider>
   );
 };

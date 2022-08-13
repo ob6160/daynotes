@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "dev": "NODE_ENV=development astro dev",
+    "start": "NODE_ENV=development astro dev",
+    "build": "NODE_ENV=development astro build",
+    "preview": "NODE_ENV=development astro preview",
     "lint": "eslint --ext .js,.astro,.ts,.tsx src"
   },
   "devDependencies": {
