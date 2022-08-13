@@ -4,7 +4,7 @@ import {
   useGoogleLogin,
 } from '@react-oauth/google';
 import { FunctionalComponent } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {
   dateToEpoch,
@@ -39,12 +39,26 @@ ${content}
   `;
 };
 
+const uploadSyncFile = (accessToken: string, timelineState: string) =>
+  fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&includeLabels=daynotes_backup',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/related;boundary=--',
+      },
+      body: constructBackupUploadBody(timelineState, dateToEpoch(new Date())),
+    },
+  );
+
 const listSyncFiles = (accessToken: string) => {
-  const searchQuery = 'title:daynotes_sync';
+  const searchQuery = encodeURIComponent("name contains 'daynotes_sync'");
   return fetch(`https://www.googleapis.com/drive/v3/files?q=${searchQuery}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
     },
   });
 };
@@ -53,6 +67,8 @@ const GoogleLogin = () => {
   const $timelineState = useStore(sharedTimelineState);
   const stateAsString = JSON.stringify($timelineState, mapReplacer);
 
+  const [availableNotes, setAvailableNotes] = useState([]);
+
   const googleLoginSuccessHandler = useCallback(
     async (
       tokenResponse: Omit<
@@ -60,25 +76,12 @@ const GoogleLogin = () => {
         'error' | 'error_description' | 'error_uri'
       >,
     ) => {
-      const uploadRequest = await fetch(
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&includeLabels=daynotes_backup',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-            'Content-Type': 'multipart/related;boundary=--',
-          },
-          body: constructBackupUploadBody(
-            stateAsString,
-            dateToEpoch(new Date()),
-          ),
-        },
-      );
-
-      console.log(await uploadRequest.text());
-      console.log(await listSyncFiles(tokenResponse.access_token));
+      const result = await listSyncFiles(tokenResponse.access_token);
+      const files = await result.json();
+      setAvailableNotes(files);
+      console.log('test', availableNotes);
     },
-    [stateAsString],
+    [availableNotes],
   );
 
   const initiateGoogleLogin = useGoogleLogin({
