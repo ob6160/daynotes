@@ -1,5 +1,6 @@
+import { WritableAtom } from 'nanostores';
 import { createContext } from 'preact';
-import { StateUpdater, useCallback, useContext, useMemo } from 'preact/hooks';
+import { useCallback, useContext, useMemo } from 'preact/hooks';
 
 export type Note = {
   title?: string;
@@ -48,8 +49,7 @@ type DayTimestamp = number;
 
 export type TimelineData = Map<DayTimestamp, Day>;
 
-export const TimelineStore =
-  createContext<[TimelineData, StateUpdater<TimelineData>]>(null);
+export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 
 export const getInitialTimelineState = () => {
   return (
@@ -135,7 +135,10 @@ const mapReviver = (_key, value: any) => {
 
 // Mega massive hook, but it's a good enough solution for now :-)
 export const useTimelineState = (date: number) => {
-  const [timeline, setTimeline] = useContext(TimelineStore);
+  const timelineState = useContext(TimelineStore);
+  const timeline = timelineState.get();
+  const setTimeline = timelineState.set;
+
   const day = timeline.get(date);
 
   const notes = useMemo(

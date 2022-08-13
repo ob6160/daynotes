@@ -1,5 +1,5 @@
 import { FunctionalComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import Day from './Day/Day';
 import {
   getDaysIncludingFirstEntry,
@@ -9,17 +9,21 @@ import {
   TimelineStore,
 } from '../lib/timelineStore';
 import './Timeline.scss';
+import { atom } from 'nanostores';
+import { useStore } from '@nanostores/preact';
 
 type TimelineProps = {
   backupMode?: boolean;
 };
 
+const timelineState = atom<TimelineData>(getInitialTimelineState());
+
 const Timeline: FunctionalComponent<TimelineProps> = () => {
-  const state = useState<TimelineData>(getInitialTimelineState());
-  const stateAsString = JSON.stringify(state[0], mapReplacer);
+  const $timelineState = useStore(timelineState);
+  const stateAsString = JSON.stringify($timelineState, mapReplacer);
 
   // Fill in the gaps, so we render all the days — even if there are no entries.
-  const daysToRender = getDaysIncludingFirstEntry(state[0]);
+  const daysToRender = getDaysIncludingFirstEntry($timelineState);
 
   const timeline = daysToRender.map((date) => (
     <Day
@@ -35,11 +39,11 @@ const Timeline: FunctionalComponent<TimelineProps> = () => {
         window.localStorage.setItem('state', stateAsString);
       }
     },
-    [state, stateAsString],
+    [stateAsString],
   );
 
   return (
-    <TimelineStore.Provider value={state}>
+    <TimelineStore.Provider value={timelineState}>
       <section class="timeline">
         <ul class="link-card-grid">{timeline}</ul>
       </section>
