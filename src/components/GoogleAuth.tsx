@@ -12,14 +12,13 @@ import {
   sharedTimelineState,
 } from '../lib/timelineStore';
 
-const constructBackupUploadBody = (content: string, timestamp?: number) => {
-  const fileName = timestamp
-    ? `daynotes_sync_${timestamp}.json`
-    : `daynotes_sync.json`;
+const fileNameFromTimestamp = (timestamp?: number) =>
+  timestamp ? `daynotes_sync_${timestamp}.json` : `daynotes_sync.json`;
 
+const constructBackupUploadBody = (content: string, timestamp?: number) => {
   const metadata = JSON.stringify({
     description: 'Synchronised data from daynotes',
-    name: fileName,
+    name: fileNameFromTimestamp(timestamp),
     mimeType: 'application/json',
     properties: {
       type: 'daynotes_backup',
@@ -41,7 +40,7 @@ ${content}
 
 const uploadSyncFile = (accessToken: string, timelineState: string) =>
   fetch(
-    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&includeLabels=daynotes_backup',
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
     {
       method: 'POST',
       headers: {
@@ -51,6 +50,31 @@ const uploadSyncFile = (accessToken: string, timelineState: string) =>
       body: constructBackupUploadBody(timelineState, dateToEpoch(new Date())),
     },
   );
+
+const checkBackupExists = async (accessToken: string, timestamp?: number) => {
+  const fileSearchQuery = encodeURIComponent(
+    `name contains '${fileNameFromTimestamp(timestamp)}'`,
+  );
+  const fileSearchResult = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q=${fileSearchQuery}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json',
+      },
+    },
+  );
+  const files = (await fileSearchResult.json())?.files;
+  const tooManySyncFilesExist = files.length > 1 && files.length !== 0;
+  if (tooManySyncFilesExist) {
+    console.error(
+      'More than one sync file exists.. please ensure that there is only one per timestamp',
+    );
+  }
+
+  return files[0];
+};
 
 const listSyncFiles = (accessToken: string) => {
   const searchQuery = encodeURIComponent("name contains 'daynotes_sync'");
@@ -76,12 +100,18 @@ const GoogleLogin = () => {
         'error' | 'error_description' | 'error_uri'
       >,
     ) => {
-      const result = await listSyncFiles(tokenResponse.access_token);
-      const files = await result.json();
-      setAvailableNotes(files);
-      console.log('test', availableNotes);
+      await uploadSyncFile(tokenResponse.access_token, stateAsString);
+      // const result = await listSyncFiles(tokenResponse.access_token);
+      // const searchResultJSON = await result.json();
+      // setAvailableNotes(searchResultJSON?.files);
+      console.log(
+        await checkBackupExists(
+          tokenResponse.access_token,
+          dateToEpoch(new Date()),
+        ),
+      );
     },
-    [availableNotes],
+    [stateAsString],
   );
 
   const initiateGoogleLogin = useGoogleLogin({
@@ -93,7 +123,16 @@ const GoogleLogin = () => {
     return initiateGoogleLogin();
   }, [initiateGoogleLogin]);
 
-  return <button onClick={googleLoginClickHandler}>test</button>;
+  return (
+    <>
+      <button onClick={googleLoginClickHandler}>test</button>
+      <ul>
+        {availableNotes.map(({ name, id }) => (
+          <li key={id}>{name}</li>
+        ))}
+      </ul>
+    </>
+  );
 };
 
 interface GoogleAuthProps {
