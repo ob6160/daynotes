@@ -39,7 +39,7 @@ const Backup: FunctionalComponent = () => {
       "Are you sure? If you proceed, you'll replace all your notes.",
     );
     if (importValue !== '' && areYouSure) {
-      window.localStorage.setItem('state', importValue);
+      window.localStorage.setItem('note_state', importValue);
       setState(getInitialTimelineState());
       setImportValue('');
       setImported(true);

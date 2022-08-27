@@ -45,9 +45,9 @@ export type Day = {
   books?: { [id: string]: Book };
 };
 
-type DayTimestamp = number;
+type DateTimestampMMDDYYYY = `${number}/${number}/${number}`;
 
-export type TimelineData = Map<DayTimestamp, Day>;
+export type TimelineData = Map<DateTimestampMMDDYYYY, Day>;
 
 export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 
@@ -55,6 +55,9 @@ export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 export const dateToEpoch = (date: Date) => {
   return date.setHours(0, 0, 0, 0).valueOf();
 };
+
+const getDateTimestampMMDDYYYY = (date: Date): DateTimestampMMDDYYYY =>
+  `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
 
 export const mapReplacer = (_key, value: unknown) => {
   if (value instanceof Map) {
@@ -83,7 +86,7 @@ const getPersistedState = () => {
   }
 
   try {
-    const localStorageState = window.localStorage.getItem('state');
+    const localStorageState = window.localStorage.getItem('note_state');
 
     const parsed = JSON.parse(localStorageState, mapReviver);
     if (!(parsed instanceof Map)) {
@@ -100,7 +103,7 @@ export const getInitialTimelineState = () => {
     getPersistedState() ??
     new Map([
       [
-        dateToEpoch(new Date()),
+        getDateTimestampMMDDYYYY(new Date()),
         {
           notes: {},
           books: {},
@@ -120,25 +123,24 @@ export const sharedTimelineState = atom<TimelineData>(
 
 export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
   const oneDayInMs = 1000 * 60 * 60 * 24;
-  const today = dateToEpoch(new Date());
 
-  const storedDayTimestamps = Array.from(timeline.keys());
+  const storedDayTimestamps = Array.from(timeline.keys()).map((d) =>
+    Date.parse(d),
+  );
   const earliestStoredDay = Math.min(...storedDayTimestamps);
 
+  const today = dateToEpoch(new Date());
+
   const daysIncludingFirstEntry = [];
-  for (
-    let currentDay = earliestStoredDay;
-    currentDay <= today;
-    currentDay += oneDayInMs
-  ) {
-    daysIncludingFirstEntry.push(currentDay);
+  for (let i = earliestStoredDay; i <= today; i += oneDayInMs) {
+    daysIncludingFirstEntry.push(i);
   }
 
-  return daysIncludingFirstEntry.sort((a, b) => b - a);
+  return daysIncludingFirstEntry;
 };
 
 // Mega massive hook, but it's a good enough solution for now :-)
-export const useTimelineState = (date: number) => {
+export const useTimelineState = (date: DateTimestampMMDDYYYY) => {
   const timelineState = useContext(TimelineStore);
   const timeline = timelineState.get();
   const setTimeline = timelineState.set;
