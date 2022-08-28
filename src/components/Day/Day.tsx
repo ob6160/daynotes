@@ -1,6 +1,9 @@
 import { FunctionComponent } from 'preact';
 import { useMemo } from 'preact/hooks';
-import { useTimelineState } from '../../lib/timelineStore';
+import {
+  DateTimestampMMDDYYYY,
+  useTimelineState,
+} from '../../lib/timelineStore';
 import Note from '../Fields/Note/Note';
 import Title from './Title';
 import './Day.scss';
@@ -10,7 +13,7 @@ import Book from '../Fields/Book/Book';
 import Link from '../Fields/Link/Link';
 
 interface DayProps {
-  date: number;
+  date: DateTimestampMMDDYYYY;
 }
 
 const Day: FunctionComponent<DayProps> = ({ date, children }) => {

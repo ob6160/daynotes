@@ -1,11 +1,14 @@
 import { FunctionComponent } from 'preact';
 import { useCallback } from 'preact/hooks';
-import { useTimelineState } from '../../../lib/timelineStore';
+import {
+  DateTimestampMMDDYYYY,
+  useTimelineState,
+} from '../../../lib/timelineStore';
 import './Note.scss';
 
 type NoteProps = {
   id: string;
-  date: number;
+  date: DateTimestampMMDDYYYY;
   title?: string;
   content?: string;
 };
