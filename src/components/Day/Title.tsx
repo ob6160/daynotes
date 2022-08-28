@@ -1,14 +1,11 @@
 import { FunctionComponent } from 'preact';
 import { useMemo } from 'preact/hooks';
-import {
-  DateTimestampMMDDYYYY,
-  useTimelineState,
-} from '../../lib/timelineStore';
+import { DateTimestamp, useTimelineState } from '../../lib/timelineStore';
 
 import './Title.scss';
 
 type TitleProps = {
-  date: DateTimestampMMDDYYYY;
+  date: DateTimestamp;
   hasContent: boolean;
 };
 

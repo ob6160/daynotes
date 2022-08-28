@@ -7,15 +7,19 @@ import { FunctionalComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {
-  dateToEpoch,
+  DateTimestamp,
+  getTodayTimestamp,
   mapReplacer,
   sharedTimelineState,
 } from '../lib/timelineStore';
 
-const fileNameFromTimestamp = (timestamp?: number) =>
+const fileNameFromTimestamp = (timestamp?: DateTimestamp) =>
   timestamp ? `daynotes_sync_${timestamp}.json` : `daynotes_sync.json`;
 
-const constructBackupUploadBody = (content: string, timestamp?: number) => {
+const constructBackupUploadBody = (
+  content: string,
+  timestamp?: DateTimestamp,
+) => {
   const metadata = JSON.stringify({
     description: 'Synchronised data from daynotes',
     name: fileNameFromTimestamp(timestamp),
@@ -47,11 +51,14 @@ const uploadSyncFile = (accessToken: string, timelineState: string) =>
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/related;boundary=--',
       },
-      body: constructBackupUploadBody(timelineState, dateToEpoch(new Date())),
+      body: constructBackupUploadBody(timelineState, getTodayTimestamp()),
     },
   );
 
-const checkBackupExists = async (accessToken: string, timestamp?: number) => {
+const checkBackupExists = async (
+  accessToken: string,
+  timestamp?: DateTimestamp,
+) => {
   const fileSearchQuery = encodeURIComponent(
     `name contains '${fileNameFromTimestamp(timestamp)}'`,
   );
@@ -101,13 +108,13 @@ const GoogleLogin = () => {
       >,
     ) => {
       await uploadSyncFile(tokenResponse.access_token, stateAsString);
-      // const result = await listSyncFiles(tokenResponse.access_token);
-      // const searchResultJSON = await result.json();
-      // setAvailableNotes(searchResultJSON?.files);
+      const result = await listSyncFiles(tokenResponse.access_token);
+      const searchResultJSON = await result.json();
+      setAvailableNotes(searchResultJSON?.files);
       console.log(
         await checkBackupExists(
           tokenResponse.access_token,
-          dateToEpoch(new Date()),
+          getTodayTimestamp(),
         ),
       );
     },
@@ -125,7 +132,7 @@ const GoogleLogin = () => {
 
   return (
     <>
-      <button onClick={googleLoginClickHandler}>test</button>
+      <button onClick={googleLoginClickHandler}>Google sync</button>
       <ul>
         {availableNotes.map(({ name, id }) => (
           <li key={id}>{name}</li>

@@ -45,20 +45,17 @@ export type Day = {
   books?: { [id: string]: Book };
 };
 
-export type DateTimestampMMDDYYYY = `${number}/${number}/${number}`;
+export type DateTimestamp = `${number}/${number}/${number}`;
 
-export type TimelineData = Map<DateTimestampMMDDYYYY, Day>;
+export type TimelineData = Map<DateTimestamp, Day>;
 
 export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 
-// Returns the timestamp for the start of a given day.
-export const dateToEpoch = (date: Date) => {
-  date.setHours(0, 0, 0, 0);
-  return date;
-};
+export const getTodayTimestamp = (): DateTimestamp =>
+  getDateTimestamp(new Date(Date.now()));
 
-const getDateTimestampMMDDYYYY = (date: Date): DateTimestampMMDDYYYY =>
-  `${dateToEpoch(date).getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+const getDateTimestamp = (date: Date): DateTimestamp =>
+  `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
 export const mapReplacer = (_key, value: unknown) => {
   if (value instanceof Map) {
@@ -104,7 +101,7 @@ export const getInitialTimelineState = () => {
     getPersistedState() ??
     new Map([
       [
-        getDateTimestampMMDDYYYY(new Date(Date.now())),
+        getDateTimestamp(new Date(Date.now())),
         {
           notes: {},
           books: {},
@@ -133,14 +130,14 @@ export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
   // show days from the current day back to the first day we have data for.
   const dayDiff = [];
   for (let i = firstDay; i < new Date(); i.setDate(i.getDate() + 1)) {
-    dayDiff.push(getDateTimestampMMDDYYYY(i));
+    dayDiff.push(getDateTimestamp(i));
   }
 
-  return dayDiff.reverse().map((d) => getDateTimestampMMDDYYYY(new Date(d)));
+  return dayDiff.reverse().map((d) => getDateTimestamp(new Date(d)));
 };
 
 // Mega massive hook, but it's a good enough solution for now :-)
-export const useTimelineState = (timestampIndex: DateTimestampMMDDYYYY) => {
+export const useTimelineState = (timestampIndex: DateTimestamp) => {
   const timelineState = useContext(TimelineStore);
   const timeline = timelineState.get();
   const setTimeline = timelineState.set;
@@ -203,7 +200,7 @@ export const useTimelineState = (timestampIndex: DateTimestampMMDDYYYY) => {
         new Map(
           timeline.set(timestampIndex, {
             ...day,
-            // We'd like to uncollapse the day, because we're adding a new thing.
+            // We'd like to un-collapse the day, because we're adding a new thing.
             collapsed: false,
             [type]: {
               ...entries,
