@@ -39,7 +39,7 @@ Content-Transfer-Encoding: BINARY
 
 ${content}
 ------
-  `;
+`;
 };
 
 const uploadSyncFile = (accessToken: string, timelineState: string) =>
@@ -59,9 +59,8 @@ const checkBackupExists = async (
   accessToken: string,
   timestamp?: DateTimestamp,
 ) => {
-  const fileSearchQuery = encodeURIComponent(
-    `name contains '${fileNameFromTimestamp(timestamp)}'`,
-  );
+  const fileName = fileNameFromTimestamp(timestamp);
+  const fileSearchQuery = encodeURIComponent(`name contains '${fileName}'`);
   const fileSearchResult = await fetch(
     `https://www.googleapis.com/drive/v3/files?q=${fileSearchQuery}`,
     {
@@ -79,8 +78,21 @@ const checkBackupExists = async (
       'More than one sync file exists.. please ensure that there is only one per timestamp',
     );
   }
+  return files?.[0];
+};
 
-  return files[0];
+const getBackupFileContents = async (accessToken: string, fileId: string) => {
+  const fileSearchResult = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json',
+      },
+    },
+  );
+  return fileSearchResult.json();
 };
 
 const listSyncFiles = (accessToken: string) => {
@@ -107,16 +119,22 @@ const GoogleLogin = () => {
         'error' | 'error_description' | 'error_uri'
       >,
     ) => {
-      await uploadSyncFile(tokenResponse.access_token, stateAsString);
+      const existingBackup = await checkBackupExists(
+        tokenResponse.access_token,
+        getTodayTimestamp(),
+      );
+
+      const { name, id } = existingBackup ?? {};
+      console.log(existingBackup);
+      if (typeof id === 'undefined') {
+        await uploadSyncFile(tokenResponse.access_token, stateAsString);
+      }
+
+      console.log(await getBackupFileContents(tokenResponse.access_token, id));
+
       const result = await listSyncFiles(tokenResponse.access_token);
       const searchResultJSON = await result.json();
       setAvailableNotes(searchResultJSON?.files);
-      console.log(
-        await checkBackupExists(
-          tokenResponse.access_token,
-          getTodayTimestamp(),
-        ),
-      );
     },
     [stateAsString],
   );
