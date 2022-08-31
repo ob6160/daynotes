@@ -1,4 +1,3 @@
-import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import Day from './Day/Day';
@@ -10,11 +9,7 @@ import {
 } from '../lib/timelineStore';
 import './Timeline.scss';
 
-type TimelineProps = {
-  backupMode?: boolean;
-};
-
-const Timeline: FunctionalComponent<TimelineProps> = () => {
+const Timeline = () => {
   const $timelineState = useStore(sharedTimelineState);
   const stateAsString = JSON.stringify($timelineState, mapReplacer);
 

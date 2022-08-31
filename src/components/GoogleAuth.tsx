@@ -3,7 +3,6 @@ import {
   GoogleOAuthProvider,
   useGoogleLogin,
 } from '@react-oauth/google';
-import { FunctionalComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {
@@ -139,9 +138,7 @@ interface GoogleAuthProps {
   googleClientId: string;
 }
 
-const GoogleAuth: FunctionalComponent<GoogleAuthProps> = ({
-  googleClientId,
-}) => {
+const GoogleAuth = ({ googleClientId }: GoogleAuthProps) => {
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
       <GoogleLogin />

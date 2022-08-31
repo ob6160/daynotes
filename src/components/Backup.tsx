@@ -1,4 +1,3 @@
-import { FunctionalComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import {
   getInitialTimelineState,
@@ -7,7 +6,7 @@ import {
 } from '../lib/timelineStore';
 import './Backup.scss';
 
-const Backup: FunctionalComponent = () => {
+const Backup = () => {
   const state = useState<TimelineData>(getInitialTimelineState());
   const stateAsString = JSON.stringify(state[0], mapReplacer);
   const setState = state[1];

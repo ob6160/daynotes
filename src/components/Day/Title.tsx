@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'preact';
 import { useMemo } from 'preact/hooks';
 import { useTimelineState } from '../../lib/timelineStore';
 
@@ -9,7 +8,7 @@ type TitleProps = {
   hasContent: boolean;
 };
 
-const Title: FunctionComponent<TitleProps> = ({ date, hasContent }) => {
+const Title = ({ date, hasContent }: TitleProps) => {
   const { state, mutations } = useTimelineState(date);
   const { setDayCollapsed } = mutations;
   const { day } = state;

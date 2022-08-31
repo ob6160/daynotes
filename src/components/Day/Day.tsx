@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 import { useTimelineState } from '../../lib/timelineStore';
 import Note from '../Fields/Note/Note';
 import Title from './Title';
@@ -20,6 +20,12 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const { addEntry } = mutations;
 
   const showContent = useMemo(() => !day?.collapsed, [day]);
+
+  const addNote = useCallback(() => addEntry('notes'), [addEntry]);
+  const addSong = useCallback(() => addEntry('songs'), [addEntry]);
+  const addBook = useCallback(() => addEntry('books'), [addEntry]);
+  const addPicture = useCallback(() => addEntry('pictures'), [addEntry]);
+  const addLink = useCallback(() => addEntry('links'), [addEntry]);
 
   return (
     <li class="day">
@@ -71,7 +77,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           <button
             class="action"
             aria-label="Add a note"
-            onClick={() => addEntry('notes')}
+            onClick={addNote}
           >
             <i
               aria-hidden="true"
@@ -83,8 +89,8 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             aria-label="Add a picture"
             aria-disabled="true"
             disabled={true}
-            title="Disabled, not implemnented yet"
-            onClick={() => addEntry('pictures')}
+            title="Disabled, not implemented yet"
+            onClick={addPicture}
           >
             <i
               aria-hidden="true"
@@ -96,8 +102,8 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             aria-disabled="true"
             disabled={true}
             aria-label="Add a link"
-            title="Disabled, not implemnented yet"
-            onClick={() => addEntry('links')}
+            title="Disabled, not implemented yet"
+            onClick={addLink}
           >
             <i
               aria-hidden="true"
@@ -109,8 +115,8 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             aria-label="Add a book"
             aria-disabled="true"
             disabled={true}
-            title="Disabled, not implemnented yet"
-            onClick={() => addEntry('books')}
+            title="Disabled, not implemented yet"
+            onClick={addBook}
           >
             <i
               aria-hidden="true"
@@ -122,8 +128,8 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             aria-label="Add a song"
             aria-disabled="true"
             disabled={true}
-            title="Disabled, not implemnented yet"
-            onClick={() => addEntry('songs')}
+            title="Disabled, not implemented yet"
+            onClick={addSong}
           >
             <i
               aria-hidden="true"

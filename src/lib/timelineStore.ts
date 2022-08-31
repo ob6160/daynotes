@@ -201,7 +201,7 @@ export const useTimelineState = (date: number) => {
         new Map(
           timeline.set(date, {
             ...day,
-            // We'd like to uncollapse the day, because we're adding a new thing.
+            // We'd like to un-collapse the day, because we're adding a new thing.
             collapsed: false,
             [type]: {
               ...entries,
