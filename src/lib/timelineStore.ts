@@ -49,7 +49,9 @@ export type DateTimestamp = `${number}/${number}/${number}`;
 
 export type TimelineData = Map<DateTimestamp, Day>;
 
-export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
+export const TimelineStore = createContext<WritableAtom<TimelineData> | null>(
+  null,
+);
 
 export const getTodayTimestamp = (): DateTimestamp =>
   getDateTimestamp(new Date(Date.now()));
@@ -57,7 +59,7 @@ export const getTodayTimestamp = (): DateTimestamp =>
 const getDateTimestamp = (date: Date): DateTimestamp =>
   `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
-export const mapReplacer = (_key, value: unknown) => {
+export const mapReplacer = (_key: string, value: unknown) => {
   if (value instanceof Map) {
     return {
       dataType: 'Map',
@@ -69,7 +71,7 @@ export const mapReplacer = (_key, value: unknown) => {
 
 // TODO: use zod to verify that the data type is as-expected.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapReviver = (_key, value: any) => {
+const mapReviver = (_key: string, value: any) => {
   if (typeof value === 'object' && value !== null) {
     if (value.dataType === 'Map') {
       return new Map(value?.value);
@@ -84,7 +86,7 @@ const getPersistedState = () => {
   }
 
   try {
-    const localStorageState = window.localStorage.getItem('note_state');
+    const localStorageState = window.localStorage.getItem('note_state') ?? '';
 
     const parsed = JSON.parse(localStorageState, mapReviver);
     if (!(parsed instanceof Map)) {
@@ -139,10 +141,19 @@ export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
 // Mega massive hook, but it's a good enough solution for now :-)
 export const useTimelineState = (timestampIndex: DateTimestamp) => {
   const timelineState = useContext(TimelineStore);
+
+  if (timelineState === null) {
+    console.error('TimelineStore context is not initialised');
+    throw new Error('TimelineStore is null');
+  }
+
   const timeline = timelineState.get();
   const setTimeline = timelineState.set;
 
-  const day = timeline.get(timestampIndex);
+  const day = useMemo(
+    () => timeline.get(timestampIndex) ?? {},
+    [timeline, timestampIndex],
+  );
 
   const notes = useMemo(
     () => (day?.notes ? Object.entries(day.notes) : []),
@@ -215,7 +226,9 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
 
   const updateNoteContent = useCallback(
     (newContent: string, noteId: string) => {
-      const updatedNote = { ...day.notes[noteId], content: newContent };
+      const notes = day?.notes ?? {};
+      const note = notes?.[noteId] ?? {};
+      const updatedNote = { ...note, content: newContent };
       setTimeline(
         new Map(
           timeline.set(timestampIndex, {
@@ -230,13 +243,14 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
 
   const setNoteCompletion = useCallback(
     (complete: boolean, noteId: string) => {
-      const note = day.notes[noteId];
+      const notes = day?.notes ?? {};
+      const note = notes?.[noteId] ?? {};
       const completedNote = { ...note, complete };
       setTimeline(
         new Map(
           timeline.set(timestampIndex, {
             ...day,
-            notes: { ...day.notes, [noteId]: completedNote },
+            notes: { ...notes, [noteId]: completedNote },
           }),
         ),
       );
@@ -246,8 +260,9 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
 
   const removeNote = useCallback(
     (noteId: string) => {
+      const notes = day?.notes ?? {};
       // Filter the note out of the id list.
-      const filteredIds = Object.keys(day.notes).filter(
+      const filteredIds = Object.keys(notes).filter(
         (currentNoteId) => currentNoteId !== noteId,
       );
 
@@ -255,7 +270,7 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
       const finalNotes = Object.fromEntries(
         filteredIds.map((currentNoteId) => [
           currentNoteId,
-          day.notes[currentNoteId],
+          notes?.[currentNoteId],
         ]),
       );
 

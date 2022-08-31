@@ -7,7 +7,9 @@
     "start": "NODE_ENV=development astro dev",
     "build": "NODE_ENV=development astro build",
     "preview": "NODE_ENV=development astro preview",
-    "lint": "eslint --ext .js,.astro,.ts,.tsx src"
+    "lint": "eslint --ext .js,.astro,.ts,.tsx src",
+    "tsc": "astro check && tsc --noEmit",
+    "tsc:watch": "astro check && tsc --noEmit --watch"
   },
   "devDependencies": {
     "@astrojs/preact": "^1.0.2",

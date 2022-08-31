@@ -54,10 +54,17 @@ const uploadSyncFile = (accessToken: string, timelineState: string) =>
     },
   );
 
+type DriveFile = {
+  kind: string;
+  id: string;
+  name: string;
+  mimeType: string;
+};
+
 const checkBackupExists = async (
   accessToken: string,
   timestamp?: DateTimestamp,
-) => {
+): Promise<DriveFile[] | undefined> => {
   const fileName = fileNameFromTimestamp(timestamp);
   const fileSearchQuery = encodeURIComponent(`name contains '${fileName}'`);
   const fileSearchResult = await fetch(
@@ -70,14 +77,24 @@ const checkBackupExists = async (
       },
     },
   );
-  const files = (await fileSearchResult.json())?.files;
+  const fileSearchResultJSON: { files?: DriveFile[] } =
+    await fileSearchResult.json();
+
+  const { files } = fileSearchResultJSON;
+
+  if (files === undefined) {
+    console.error('Unable to find backup files');
+    return;
+  }
+
   const tooManySyncFilesExist = files.length > 1 && files.length !== 0;
   if (tooManySyncFilesExist) {
     console.error(
       'More than one sync file exists.. please ensure that there is only one per timestamp',
     );
   }
-  return files?.[0];
+
+  return files;
 };
 
 const getBackupFileContents = async (accessToken: string, fileId: string) => {
@@ -123,7 +140,7 @@ const GoogleLogin = () => {
         getTodayTimestamp(),
       );
 
-      const { name, id } = existingBackup ?? {};
+      const { name, id } = existingBackup;
       console.log(existingBackup);
       if (typeof id === 'undefined') {
         await uploadSyncFile(tokenResponse.access_token, stateAsString);
