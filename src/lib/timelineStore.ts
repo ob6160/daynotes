@@ -45,16 +45,17 @@ export type Day = {
   books?: { [id: string]: Book };
 };
 
-type DayTimestamp = number;
+export type DateTimestamp = `${number}/${number}/${number}`;
 
-export type TimelineData = Map<DayTimestamp, Day>;
+export type TimelineData = Map<DateTimestamp, Day>;
 
 export const TimelineStore = createContext<WritableAtom<TimelineData>>(null);
 
-// Returns the timestamp for the start of a given day.
-export const dateToEpoch = (date: Date) => {
-  return date.setHours(0, 0, 0, 0).valueOf();
-};
+export const getTodayTimestamp = (): DateTimestamp =>
+  getDateTimestamp(new Date(Date.now()));
+
+const getDateTimestamp = (date: Date): DateTimestamp =>
+  `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
 export const mapReplacer = (_key, value: unknown) => {
   if (value instanceof Map) {
@@ -83,7 +84,7 @@ const getPersistedState = () => {
   }
 
   try {
-    const localStorageState = window.localStorage.getItem('state');
+    const localStorageState = window.localStorage.getItem('note_state');
 
     const parsed = JSON.parse(localStorageState, mapReviver);
     if (!(parsed instanceof Map)) {
@@ -100,7 +101,7 @@ export const getInitialTimelineState = () => {
     getPersistedState() ??
     new Map([
       [
-        dateToEpoch(new Date()),
+        getDateTimestamp(new Date(Date.now())),
         {
           notes: {},
           books: {},
@@ -119,31 +120,29 @@ export const sharedTimelineState = atom<TimelineData>(
 );
 
 export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
-  const oneDayInMs = 1000 * 60 * 60 * 24;
-  const today = dateToEpoch(new Date());
+  const persistedDays = Array.from(timeline.keys());
+  const storedDayTimestamps = Array.from(persistedDays)
+    .map((d) => Date.parse(d))
+    .sort((a, b) => a - b);
+  const firstDay = new Date(storedDayTimestamps[0]);
 
-  const storedDayTimestamps = Array.from(timeline.keys());
-  const earliestStoredDay = Math.min(...storedDayTimestamps);
-
-  const daysIncludingFirstEntry = [];
-  for (
-    let currentDay = earliestStoredDay;
-    currentDay <= today;
-    currentDay += oneDayInMs
-  ) {
-    daysIncludingFirstEntry.push(currentDay);
+  // Difference in days between the first day and the current day - so we can
+  // show days from the current day back to the first day we have data for.
+  const dayDiff = [];
+  for (let i = firstDay; i < new Date(); i.setDate(i.getDate() + 1)) {
+    dayDiff.push(getDateTimestamp(i));
   }
 
-  return daysIncludingFirstEntry.sort((a, b) => b - a);
+  return dayDiff.reverse().map((d) => getDateTimestamp(new Date(d)));
 };
 
 // Mega massive hook, but it's a good enough solution for now :-)
-export const useTimelineState = (date: number) => {
+export const useTimelineState = (timestampIndex: DateTimestamp) => {
   const timelineState = useContext(TimelineStore);
   const timeline = timelineState.get();
   const setTimeline = timelineState.set;
 
-  const day = timeline.get(date);
+  const day = timeline.get(timestampIndex);
 
   const notes = useMemo(
     () => (day?.notes ? Object.entries(day.notes) : []),
@@ -170,14 +169,14 @@ export const useTimelineState = (date: number) => {
     (isCollapsed: boolean) => {
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(timestampIndex, {
             ...day,
             collapsed: isCollapsed,
           }),
         ),
       );
     },
-    [date, day, setTimeline, timeline],
+    [timestampIndex, day, setTimeline, timeline],
   );
 
   const hasContent = useMemo(() => {
@@ -193,13 +192,13 @@ export const useTimelineState = (date: number) => {
   const addEntry = useCallback(
     (type: EntryType) => {
       if (day === undefined) {
-        timeline.set(date, {});
+        timeline.set(timestampIndex, {});
       }
       const entries = day?.[type];
       const entryId = crypto.randomUUID();
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(timestampIndex, {
             ...day,
             // We'd like to un-collapse the day, because we're adding a new thing.
             collapsed: false,
@@ -211,7 +210,7 @@ export const useTimelineState = (date: number) => {
         ),
       );
     },
-    [day, setTimeline, timeline, date],
+    [day, setTimeline, timeline, timestampIndex],
   );
 
   const updateNoteContent = useCallback(
@@ -219,14 +218,14 @@ export const useTimelineState = (date: number) => {
       const updatedNote = { ...day.notes[noteId], content: newContent };
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(timestampIndex, {
             ...day,
             notes: { ...day.notes, [noteId]: updatedNote },
           }),
         ),
       );
     },
-    [date, day, setTimeline, timeline],
+    [timestampIndex, day, setTimeline, timeline],
   );
 
   const setNoteCompletion = useCallback(
@@ -235,14 +234,14 @@ export const useTimelineState = (date: number) => {
       const completedNote = { ...note, complete };
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(timestampIndex, {
             ...day,
             notes: { ...day.notes, [noteId]: completedNote },
           }),
         ),
       );
     },
-    [date, day, setTimeline, timeline],
+    [timestampIndex, day, setTimeline, timeline],
   );
 
   const removeNote = useCallback(
@@ -262,14 +261,14 @@ export const useTimelineState = (date: number) => {
 
       setTimeline(
         new Map(
-          timeline.set(date, {
+          timeline.set(timestampIndex, {
             ...day,
             notes: finalNotes,
           }),
         ),
       );
     },
-    [day, setTimeline, timeline, date],
+    [day, setTimeline, timeline, timestampIndex],
   );
 
   return {

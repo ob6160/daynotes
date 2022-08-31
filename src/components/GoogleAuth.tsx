@@ -6,15 +6,19 @@ import {
 import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {
-  dateToEpoch,
+  DateTimestamp,
+  getTodayTimestamp,
   mapReplacer,
   sharedTimelineState,
 } from '../lib/timelineStore';
 
-const fileNameFromTimestamp = (timestamp?: number) =>
+const fileNameFromTimestamp = (timestamp?: DateTimestamp) =>
   timestamp ? `daynotes_sync_${timestamp}.json` : `daynotes_sync.json`;
 
-const constructBackupUploadBody = (content: string, timestamp?: number) => {
+const constructBackupUploadBody = (
+  content: string,
+  timestamp?: DateTimestamp,
+) => {
   const metadata = JSON.stringify({
     description: 'Synchronised data from daynotes',
     name: fileNameFromTimestamp(timestamp),
@@ -34,7 +38,7 @@ Content-Transfer-Encoding: BINARY
 
 ${content}
 ------
-  `;
+`;
 };
 
 const uploadSyncFile = (accessToken: string, timelineState: string) =>
@@ -46,14 +50,16 @@ const uploadSyncFile = (accessToken: string, timelineState: string) =>
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/related;boundary=--',
       },
-      body: constructBackupUploadBody(timelineState, dateToEpoch(new Date())),
+      body: constructBackupUploadBody(timelineState, getTodayTimestamp()),
     },
   );
 
-const checkBackupExists = async (accessToken: string, timestamp?: number) => {
-  const fileSearchQuery = encodeURIComponent(
-    `name contains '${fileNameFromTimestamp(timestamp)}'`,
-  );
+const checkBackupExists = async (
+  accessToken: string,
+  timestamp?: DateTimestamp,
+) => {
+  const fileName = fileNameFromTimestamp(timestamp);
+  const fileSearchQuery = encodeURIComponent(`name contains '${fileName}'`);
   const fileSearchResult = await fetch(
     `https://www.googleapis.com/drive/v3/files?q=${fileSearchQuery}`,
     {
@@ -71,8 +77,21 @@ const checkBackupExists = async (accessToken: string, timestamp?: number) => {
       'More than one sync file exists.. please ensure that there is only one per timestamp',
     );
   }
+  return files?.[0];
+};
 
-  return files[0];
+const getBackupFileContents = async (accessToken: string, fileId: string) => {
+  const fileSearchResult = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json',
+      },
+    },
+  );
+  return fileSearchResult.json();
 };
 
 const listSyncFiles = (accessToken: string) => {
@@ -99,16 +118,22 @@ const GoogleLogin = () => {
         'error' | 'error_description' | 'error_uri'
       >,
     ) => {
-      await uploadSyncFile(tokenResponse.access_token, stateAsString);
-      // const result = await listSyncFiles(tokenResponse.access_token);
-      // const searchResultJSON = await result.json();
-      // setAvailableNotes(searchResultJSON?.files);
-      console.log(
-        await checkBackupExists(
-          tokenResponse.access_token,
-          dateToEpoch(new Date()),
-        ),
+      const existingBackup = await checkBackupExists(
+        tokenResponse.access_token,
+        getTodayTimestamp(),
       );
+
+      const { name, id } = existingBackup ?? {};
+      console.log(existingBackup);
+      if (typeof id === 'undefined') {
+        await uploadSyncFile(tokenResponse.access_token, stateAsString);
+      }
+
+      console.log(await getBackupFileContents(tokenResponse.access_token, id));
+
+      const result = await listSyncFiles(tokenResponse.access_token);
+      const searchResultJSON = await result.json();
+      setAvailableNotes(searchResultJSON?.files);
     },
     [stateAsString],
   );
@@ -124,7 +149,7 @@ const GoogleLogin = () => {
 
   return (
     <>
-      <button onClick={googleLoginClickHandler}>test</button>
+      <button onClick={googleLoginClickHandler}>Google sync</button>
       <ul>
         {availableNotes.map(({ name, id }) => (
           <li key={id}>{name}</li>

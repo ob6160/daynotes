@@ -10,169 +10,250 @@ const { title } = Astro.props as Props;
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge"
+    />
+    <link
+      rel="canonical"
+      href="https://daynot.es/"
+    />
+    <meta
+      property="og:site_name"
+      content="Daynotes — what happened today? a space for thoughts, memories and reflection."
+    />
+    <meta
+      property="og:title"
+      content="Daynotes "
+    />
+    <meta
+      property="og:type"
+      content="website"
+    />
+    <meta
+      property="og:url"
+      content="https://daynot.es/"
+    />
+    <meta
+      property="og:image"
+      content="/social-media-preview.png"
+    />
+    <meta
+      name="twitter:image"
+      content="/social-media-preview.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="Page image for Daynotes"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Page image for Daynotes"
+    />
+    <meta
+      name="description"
+      content="Coming soon"
+    />
+    <meta
+      name="twitter:description"
+      content="Coming soon"
+    />
+    <meta
+      property="og:description"
+      content="Coming soon"
+    />
+    <meta
+      name="monetization"
+      content="https://github.com/sponsors/ob6160"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png"
+    />
+    <link
+      rel="manifest"
+      href="/site.webmanifest"
+    />
+    <link
+      rel="shortcut icon"
+      href="/favicon.ico"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro&display=swap"
+    />
+    <script
+      defer
+      data-domain="daynot.es"
+      src="https://plausible.io/js/plausible.js"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/e65e64f9cf.js"
+      async
+      defer
+      crossorigin="anonymous"
+    ></script>
+    <title>{title}</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <link rel="canonical" href="https://daynot.es/" />
-  <meta property="og:site_name"
-    content="Daynotes — what happened today? a space for thoughts, memories and reflection." />
-  <meta property="og:title" content="Daynotes " />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://daynot.es/" />
-  <meta property="og:image" content="/social-media-preview.png" />
-  <meta name="twitter:image" content="/social-media-preview.png" />
-  <meta property="og:image:alt" content="Page image for Daynotes" />
-  <meta name="twitter:image:alt" content="Page image for Daynotes" />
-  <meta name="description" content="Coming soon" />
-  <meta name="twitter:description" content="Coming soon" />
-  <meta property="og:description" content="Coming soon" />
-  <meta name="monetization" content="https://github.com/sponsors/ob6160" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro&display=swap" />
-  <script defer data-domain="daynot.es" src="https://plausible.io/js/plausible.js" />
-  <script src="https://kit.fontawesome.com/e65e64f9cf.js" async defer crossorigin="anonymous" />
-  <title>{title}</title>
-</head>
+  <body>
+    <slot />
+    <style lang="scss">
+      :root {
+        --black: #000000ff;
+        --oxford-blue: #14213dff;
+        --orange-web: #fca311ff;
+        --platinum: #e5e5e5ff;
+        --white: #ffffffff;
+        --purple: #4f39fa;
+        --pink: #da62c4;
+        --dark-pink: #bf2da4;
+        --green: #2f855a;
+        --red: #c53030;
+        --emphasis-gradient: linear-gradient(
+          300deg,
+          var(--pink),
+          var(--purple)
+        );
 
-<body>
-  <slot />
-</body>
+        --s-5: clamp(0.33rem, 0.39rem + -0.29vw, 0.18rem);
+        --s-4: clamp(0.41rem, 0.47rem + -0.31vw, 0.25rem);
+        --s-3: clamp(0.51rem, 0.57rem + -0.31vw, 0.35rem);
+        --s-2: clamp(0.64rem, 0.69rem + -0.27vw, 0.5rem);
+        --s-1: clamp(0.8rem, 0.84rem + -0.18vw, 0.71rem);
+        --s0: clamp(1rem, 1rem + 0vw, 1rem);
+        --s1: clamp(1.25rem, 1.19rem + 0.32vw, 1.41rem);
+        --s2: clamp(1.56rem, 1.39rem + 0.85vw, 2rem);
+        --s3: clamp(1.95rem, 1.61rem + 1.7vw, 2.83rem);
+        --s4: clamp(2.44rem, 1.83rem + 3.04vw, 4rem);
+        --s5: clamp(3.05rem, 2.04rem + 5.07vw, 5.65rem);
 
-</html>
-<style lang="scss">
-  :root {
-    --black: #000000ff;
-    --oxford-blue: #14213dff;
-    --orange-web: #fca311ff;
-    --platinum: #e5e5e5ff;
-    --white: #ffffffff;
-    --purple: #4f39fa;
-    --pink: #da62c4;
-    --dark-pink: #bf2da4;
-    --green: #2F855A;
-    --red: #C53030;
-    --emphasis-gradient: linear-gradient(300deg, var(--pink), var(--purple));
+        --source-serif-pro: 'Source Serif Pro', sans-serif;
 
-    --s-5: clamp(0.33rem, 0.39rem + -0.29vw, 0.18rem);
-    --s-4: clamp(0.41rem, 0.47rem + -0.31vw, 0.25rem);
-    --s-3: clamp(0.51rem, 0.57rem + -0.31vw, 0.35rem);
-    --s-2: clamp(0.64rem, 0.69rem + -0.27vw, 0.5rem);
-    --s-1: clamp(0.8rem, 0.84rem + -0.18vw, 0.71rem);
-    --s0: clamp(1rem, 1rem + 0vw, 1rem);
-    --s1: clamp(1.25rem, 1.19rem + 0.32vw, 1.41rem);
-    --s2: clamp(1.56rem, 1.39rem + 0.85vw, 2rem);
-    --s3: clamp(1.95rem, 1.61rem + 1.7vw, 2.83rem);
-    --s4: clamp(2.44rem, 1.83rem + 3.04vw, 4rem);
-    --s5: clamp(3.05rem, 2.04rem + 5.07vw, 5.65rem);
-
-    --source-serif-pro: 'Source Serif Pro', sans-serif;
-
-    --color-text: hsl(12, 5%, 4%);
-    --color-bg: hsl(10, 21%, 95%);
-    --color-border: hsl(17, 24%, 90%);
-  }
-
-  html,
-  body {
-    font-family: var(--source-serif-pro);
-    font-size: var(--s0);
-    color: var(--color-text);
-    background-color: var(--color-bg);
-    height: 100%;
-    margin: 0;
-  }
-
-  :global(h1) {
-    font-size: var(--s5);
-  }
-
-  :global(h2) {
-    font-size: var(--s3);
-  }
-
-  :global(h3) {
-    font-size: var(--s2);
-  }
-
-  :global(i) {
-    vertical-align: middle;
-  }
-
-  :global(a) {
-    &:is(:focus) {
-      outline: 4px solid black;
-    }
-  }
-
-  :global(textarea) {
-    padding: var(--s-2) var(--s-4);
-    border-radius: 0;
-    border: 2px solid black;
-    resize: none;
-    margin: 0;
-
-    &:is(:focus) {
-      outline: none;
-      border: 4px solid black;
-      margin: -2px;
-      outline-offset: 0;
-    }
-  }
-
-  :global(input) {
-    padding: var(--s-2) var(--s-4);
-    border-radius: 0;
-    border: 2px solid black;
-    resize: none;
-    margin: 0;
-
-    &:is(:focus) {
-      outline: none;
-      border: 4px solid black;
-      margin: -2px;
-      outline-offset: 0;
-    }
-  }
-
-  :global(button) {
-    background: none;
-    color: inherit;
-    padding: var(--s-4) var(--s-1);
-    font: inherit;
-    cursor: pointer;
-    margin: 0;
-    outline: inherit;
-    font-size: var(--s1);
-    border: 2px solid black;
-
-    &.secondary {
-      border: none;
-
-      &:is(:focus, :active) {
-        outline: none;
-        border: 4px solid black;
-        margin: -4px;
-        outline-offset: 0;
+        --color-text: hsl(12, 5%, 4%);
+        --color-bg: hsl(10, 21%, 95%);
+        --color-border: hsl(17, 24%, 90%);
       }
-    }
 
-    &:is(:focus, :active) {
-      outline: none;
-      border: 4px solid black;
-      margin: -2px;
-      outline-offset: 0;
-    }
+      html,
+      body {
+        font-family: var(--source-serif-pro);
+        font-size: var(--s0);
+        color: var(--color-text);
+        background-color: var(--color-bg);
+        height: 100%;
+        margin: 0;
+      }
 
-    &:is(:disabled) {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-  }
-</style>
+      :global(h1) {
+        font-size: var(--s5);
+      }
+
+      :global(h2) {
+        font-size: var(--s3);
+      }
+
+      :global(h3) {
+        font-size: var(--s2);
+      }
+
+      :global(i) {
+        vertical-align: middle;
+      }
+
+      :global(a) {
+        &:is(:focus) {
+          outline: 4px solid black;
+        }
+      }
+
+      :global(textarea) {
+        padding: var(--s-2) var(--s-4);
+        border-radius: 0;
+        border: 2px solid black;
+        resize: none;
+        margin: 0;
+
+        &:is(:focus) {
+          outline: none;
+          border: 4px solid black;
+          margin: -2px;
+          outline-offset: 0;
+        }
+      }
+
+      :global(input) {
+        padding: var(--s-2) var(--s-4);
+        border-radius: 0;
+        border: 2px solid black;
+        resize: none;
+        margin: 0;
+
+        &:is(:focus) {
+          outline: none;
+          border: 4px solid black;
+          margin: -2px;
+          outline-offset: 0;
+        }
+      }
+
+      :global(button) {
+        background: none;
+        color: inherit;
+        padding: var(--s-4) var(--s-1);
+        font: inherit;
+        cursor: pointer;
+        margin: 0;
+        outline: inherit;
+        font-size: var(--s1);
+        border: 2px solid black;
+
+        &.secondary {
+          border: none;
+
+          &:is(:focus, :active) {
+            outline: none;
+            border: 4px solid black;
+            margin: -4px;
+            outline-offset: 0;
+          }
+        }
+
+        &:is(:focus, :active) {
+          outline: none;
+          border: 4px solid black;
+          margin: -2px;
+          outline-offset: 0;
+        }
+
+        &:is(:disabled) {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    </style>
+  </body>
+</html>
