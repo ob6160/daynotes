@@ -86,6 +86,18 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
           </button>
           <button
             class="action"
+            aria-disabled="true"
+            aria-label="Add a link"
+            title="Disabled, not implemented yet"
+            onClick={addLink}
+          >
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-link"
+            />
+          </button>
+          <button
+            class="action"
             aria-label="Add a picture"
             aria-disabled="true"
             disabled={true}
@@ -95,19 +107,6 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             <i
               aria-hidden="true"
               class="fa-solid fa-image"
-            />
-          </button>
-          <button
-            class="action"
-            aria-disabled="true"
-            disabled={true}
-            aria-label="Add a link"
-            title="Disabled, not implemented yet"
-            onClick={addLink}
-          >
-            <i
-              aria-hidden="true"
-              class="fa-solid fa-link"
             />
           </button>
           <button

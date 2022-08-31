@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import {
   getInitialTimelineState,
   mapReplacer,
@@ -47,6 +48,12 @@ const Backup = () => {
       }, 1000);
     }
   }, [importValue, setState]);
+
+  const importValueInput = useCallback(
+    (e: JSXInternal.TargetedEvent<HTMLTextAreaElement, Event>) =>
+      setImportValue((e.target as HTMLTextAreaElement)?.value),
+    [setImportValue],
+  );
 
   return (
     <section class="backup">
@@ -149,7 +156,7 @@ const Backup = () => {
               )}
             </button>
             <textarea
-              onInput={(e) => setImportValue(e.target?.value)}
+              onInput={importValueInput}
               value={importValue}
             />
           </>

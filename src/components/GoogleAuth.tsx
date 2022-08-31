@@ -1,8 +1,9 @@
 import {
-  TokenResponse,
   GoogleOAuthProvider,
   useGoogleLogin,
+  TokenResponse,
 } from '@react-oauth/google';
+
 import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {

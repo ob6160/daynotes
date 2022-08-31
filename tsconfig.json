@@ -6,7 +6,9 @@
     // Enable top-level await, and other modern ESM features.
     "target": "ESNext",
     "module": "ESNext",
+    // Check for undefinable variables and use strict mode.
     "strict": true,
+    "skipLibCheck": true,
     // Enable node-style module resolution, for things like npm package imports.
     "moduleResolution": "node",
     // Enable JSON imports.

@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'preact';
 import { useCallback } from 'preact/hooks';
+import { JSXInternal } from 'preact/src/jsx';
 import { DateTimestamp, useTimelineState } from '../../../lib/timelineStore';
-import './Note.scss';
+import '../Note.scss';
 
 type NoteProps = {
   id: string;
@@ -10,12 +10,20 @@ type NoteProps = {
   content?: string;
 };
 
-const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
+const Note = ({ content, id, date }: NoteProps) => {
   const { state, mutations } = useTimelineState(date);
   const { day } = state;
-  const { updateNoteContent, setNoteCompletion, removeNote } = mutations;
+  const { updateNote, setNoteCompletion, removeNote } = mutations;
 
-  const isCompleted = day?.notes[id]?.complete;
+  const note = day?.notes?.[id];
+  const isCompleted = note?.complete ?? false;
+
+  const updateNoteInput = useCallback(
+    (e: JSXInternal.TargetedEvent<HTMLTextAreaElement, Event>) => {
+      updateNote({ content: (e.target as HTMLTextAreaElement)?.value }, id);
+    },
+    [id, updateNote],
+  );
 
   const completeNoteIfPopulated = useCallback(() => {
     if (content) {
@@ -29,25 +37,29 @@ const Note: FunctionComponent<NoteProps> = ({ content, id, date }) => {
         {isCompleted ? (
           <p>{content}</p>
         ) : (
-          <textarea
-            placeholder="Write in me!"
-            value={content}
-            onInput={(e) => updateNoteContent(e.target?.value, id)}
-          />
+          <section class="inputs">
+            <textarea
+              placeholder="Write in me!"
+              value={content}
+              onInput={updateNoteInput}
+            />
+          </section>
         )}
 
         <section class="buttons">
-          <button
-            class="secondary edit"
-            onClick={() => setNoteCompletion(false, id)}
-            aria-label="Edit this note"
-            aria-pressed={!isCompleted}
-          >
-            <i
-              aria-hidden="true"
-              class="fa-solid fa-pencil"
-            />
-          </button>
+          {isCompleted && (
+            <button
+              class="secondary edit"
+              onClick={() => setNoteCompletion(false, id)}
+              aria-label="Edit this note"
+              aria-pressed={!isCompleted}
+            >
+              <i
+                aria-hidden="true"
+                class="fa-solid fa-pencil"
+              />
+            </button>
+          )}
           {!isCompleted && (
             <>
               <button

@@ -31,6 +31,8 @@ export type Book = {
   complete: boolean;
 };
 
+type NoteTypes = Note | Picture | Link | Song | Book;
+
 export type Mood = 'great' | 'bad' | 'neutral';
 
 export type EntryType = 'notes' | 'pictures' | 'links' | 'songs' | 'books';
@@ -201,11 +203,11 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
   }, [notes, songs, pictures, books, links]);
 
   const addEntry = useCallback(
-    (type: EntryType) => {
+    (noteType: EntryType) => {
       if (day === undefined) {
         timeline.set(timestampIndex, {});
       }
-      const entries = day?.[type];
+      const entries = day[noteType];
       const entryId = crypto.randomUUID();
       setTimeline(
         new Map(
@@ -213,7 +215,7 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
             ...day,
             // We'd like to un-collapse the day, because we're adding a new thing.
             collapsed: false,
-            [type]: {
+            [noteType]: {
               ...entries,
               [entryId]: { complete: false },
             },
@@ -224,16 +226,21 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
     [day, setTimeline, timeline, timestampIndex],
   );
 
-  const updateNoteContent = useCallback(
-    (newContent: string, noteId: string) => {
-      const notes = day?.notes ?? {};
+  const updateNote = useCallback(
+    (
+      noteUpdate: Partial<NoteTypes>,
+      noteId: string,
+      noteType: EntryType = 'notes',
+    ) => {
+      console.log(noteUpdate, noteId, noteType);
+      const notes = day[noteType] ?? {};
       const note = notes?.[noteId] ?? {};
-      const updatedNote = { ...note, content: newContent };
+      const updatedNote = { ...note, ...noteUpdate };
       setTimeline(
         new Map(
           timeline.set(timestampIndex, {
             ...day,
-            notes: { ...day.notes, [noteId]: updatedNote },
+            [noteType]: { ...notes, [noteId]: updatedNote },
           }),
         ),
       );
@@ -242,15 +249,15 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
   );
 
   const setNoteCompletion = useCallback(
-    (complete: boolean, noteId: string) => {
-      const notes = day?.notes ?? {};
+    (complete: boolean, noteId: string, noteType: EntryType = 'notes') => {
+      const notes = day[noteType] ?? {};
       const note = notes?.[noteId] ?? {};
       const completedNote = { ...note, complete };
       setTimeline(
         new Map(
           timeline.set(timestampIndex, {
             ...day,
-            notes: { ...notes, [noteId]: completedNote },
+            [noteType]: { ...notes, [noteId]: completedNote },
           }),
         ),
       );
@@ -259,8 +266,8 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
   );
 
   const removeNote = useCallback(
-    (noteId: string) => {
-      const notes = day?.notes ?? {};
+    (noteId: string, noteType: EntryType = 'notes') => {
+      const notes = day[noteType] ?? {};
       // Filter the note out of the id list.
       const filteredIds = Object.keys(notes).filter(
         (currentNoteId) => currentNoteId !== noteId,
@@ -278,7 +285,7 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
         new Map(
           timeline.set(timestampIndex, {
             ...day,
-            notes: finalNotes,
+            [noteType]: finalNotes,
           }),
         ),
       );
@@ -290,7 +297,7 @@ export const useTimelineState = (timestampIndex: DateTimestamp) => {
     mutations: {
       setDayCollapsed,
       addEntry,
-      updateNoteContent,
+      updateNote,
       removeNote,
       setNoteCompletion,
     },
