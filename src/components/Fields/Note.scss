@@ -33,8 +33,6 @@
       padding: var(--s-2) var(--s-4);
       inline-size: min-content;
       overflow-wrap: anywhere;
-      font-size: var(--s2);
-      gap: var(--s0);
     }
 
     .buttons {
@@ -44,6 +42,7 @@
       min-width: var(--s4);
       gap: var(--s-1);
       justify-content: space-between;
+      margin-top: 3ex;
 
       .edit {
         border-color: black;

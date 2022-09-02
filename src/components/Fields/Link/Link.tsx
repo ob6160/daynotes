@@ -52,10 +52,6 @@ const Link = ({ url, id, date, title }: LinkProps) => {
       <section class="editor">
         {isCompleted ? (
           <section class="final-content">
-            <i
-              aria-hidden="true"
-              class="fa-solid fa-link"
-            />
             <a
               href={url}
               target="_blank"

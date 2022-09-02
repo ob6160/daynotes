@@ -35,7 +35,9 @@ const Note = ({ content, id, date }: NoteProps) => {
     <section class="note">
       <section class="editor">
         {isCompleted ? (
-          <p>{content}</p>
+          <section class="final-content">
+            <p>{content}</p>
+          </section>
         ) : (
           <section class="inputs">
             <textarea
