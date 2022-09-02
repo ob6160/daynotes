@@ -51,13 +51,19 @@ const Link = ({ url, id, date, title }: LinkProps) => {
     <section class="note">
       <section class="editor">
         {isCompleted ? (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {title}
-          </a>
+          <section class="final-content">
+            <i
+              aria-hidden="true"
+              class="fa-solid fa-link"
+            />
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {title}
+            </a>
+          </section>
         ) : (
           <section class="inputs">
             <label>
