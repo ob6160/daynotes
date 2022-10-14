@@ -10,7 +10,9 @@ import {
   DateTimestamp,
   getTodayTimestamp,
   mapReplacer,
+  mapReviver,
   sharedTimelineState,
+  updateTimelineState,
 } from '../lib/timelineStore';
 
 const fileNameFromTimestamp = (timestamp?: DateTimestamp) =>
@@ -42,7 +44,19 @@ ${content}
 `;
 };
 
-const uploadSyncFile = (accessToken: string, timelineState: string) =>
+const deleteFileById = (accessToken: string, fileId: string) =>
+  fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    },
+  });
+
+const uploadSyncFile = (
+  accessToken: string,
+  timelineState: string,
+): Promise<DriveFile | undefined> =>
   fetch(
     'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
     {
@@ -53,7 +67,7 @@ const uploadSyncFile = (accessToken: string, timelineState: string) =>
       },
       body: constructBackupUploadBody(timelineState, getTodayTimestamp()),
     },
-  );
+  ).then((res) => res.json());
 
 type DriveFile = {
   kind: string;
@@ -65,7 +79,7 @@ type DriveFile = {
 const checkBackupExists = async (
   accessToken: string,
   timestamp?: DateTimestamp,
-): Promise<DriveFile[] | undefined> => {
+): Promise<DriveFile | undefined> => {
   const fileName = fileNameFromTimestamp(timestamp);
   const fileSearchQuery = encodeURIComponent(`name contains '${fileName}'`);
   const fileSearchResult = await fetch(
@@ -84,18 +98,17 @@ const checkBackupExists = async (
   const { files } = fileSearchResultJSON;
 
   if (files === undefined) {
-    console.error('Unable to find backup files');
     return;
   }
 
   const tooManySyncFilesExist = files.length > 1 && files.length !== 0;
   if (tooManySyncFilesExist) {
-    console.error(
+    throw new Error(
       'More than one sync file exists.. please ensure that there is only one per timestamp',
     );
   }
 
-  return files;
+  return files[0];
 };
 
 const getBackupFileContents = async (accessToken: string, fileId: string) => {
@@ -109,7 +122,7 @@ const getBackupFileContents = async (accessToken: string, fileId: string) => {
       },
     },
   );
-  return fileSearchResult.json();
+  return fileSearchResult.text().then((text) => JSON.parse(text, mapReviver));
 };
 
 const listSyncFiles = (accessToken: string) => {
@@ -136,22 +149,51 @@ const GoogleLogin = () => {
         'error' | 'error_description' | 'error_uri'
       >,
     ) => {
-      const existingBackup = await checkBackupExists(
-        tokenResponse.access_token,
-        getTodayTimestamp(),
-      );
+      try {
+        const mode = tokenResponse.state === 'write' ? 'write' : 'read';
 
-      const { name, id } = existingBackup;
-      console.log(existingBackup);
-      if (typeof id === 'undefined') {
-        await uploadSyncFile(tokenResponse.access_token, stateAsString);
+        const existingBackup = await checkBackupExists(
+          tokenResponse.access_token,
+          getTodayTimestamp(),
+        );
+
+        if (mode === 'write') {
+          if (existingBackup) {
+            await deleteFileById(tokenResponse.access_token, existingBackup.id);
+          }
+
+          const uploadedFileRef = await uploadSyncFile(
+            tokenResponse.access_token,
+            stateAsString,
+          );
+
+          console.log(
+            'Successfully replaced and uploaded file',
+            uploadedFileRef,
+          );
+        } else if (mode === 'read') {
+          if (existingBackup) {
+            const backupTimelineData = await getBackupFileContents(
+              tokenResponse.access_token,
+              existingBackup.id,
+            );
+
+            console.log('Setting note state: ', backupTimelineData);
+            window.localStorage.setItem(
+              'note_state',
+              JSON.stringify(backupTimelineData),
+            );
+            updateTimelineState(backupTimelineData);
+            // getInitialTimelineState();
+          }
+        }
+
+        // const result = await listSyncFiles(tokenResponse.access_token);
+        // const searchResultJSON = await result.json();
+        // setAvailableNotes(searchResultJSON?.files);
+      } catch (e) {
+        console.error(e);
       }
-
-      console.log(await getBackupFileContents(tokenResponse.access_token, id));
-
-      const result = await listSyncFiles(tokenResponse.access_token);
-      const searchResultJSON = await result.json();
-      setAvailableNotes(searchResultJSON?.files);
     },
     [stateAsString],
   );
@@ -161,13 +203,18 @@ const GoogleLogin = () => {
     onSuccess: googleLoginSuccessHandler,
   });
 
-  const googleLoginClickHandler = useCallback(() => {
-    return initiateGoogleLogin();
+  const googleReadClickHandler = useCallback(() => {
+    return initiateGoogleLogin({ state: 'read' });
+  }, [initiateGoogleLogin]);
+
+  const googleWriteClickHandler = useCallback(() => {
+    return initiateGoogleLogin({ state: 'write' });
   }, [initiateGoogleLogin]);
 
   return (
     <>
-      <button onClick={googleLoginClickHandler}>Google sync</button>
+      <button onClick={googleReadClickHandler}>Google Drive read</button>
+      <button onClick={googleWriteClickHandler}>Google Drive write</button>
       <ul>
         {availableNotes.map(({ name, id }) => (
           <li key={id}>{name}</li>

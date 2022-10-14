@@ -1,4 +1,4 @@
-import { atom, WritableAtom } from 'nanostores';
+import { action, actionFor, atom, WritableAtom } from 'nanostores';
 import { createContext } from 'preact';
 import { useCallback, useContext, useMemo } from 'preact/hooks';
 
@@ -73,7 +73,7 @@ export const mapReplacer = (_key: string, value: unknown) => {
 
 // TODO: use zod to verify that the data type is as-expected.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapReviver = (_key: string, value: any) => {
+export const mapReviver = (_key: string, value: any) => {
   if (typeof value === 'object' && value !== null) {
     if (value.dataType === 'Map') {
       return new Map(value?.value);
@@ -121,6 +121,16 @@ export const getInitialTimelineState = () => {
 
 export const sharedTimelineState = atom<TimelineData>(
   getInitialTimelineState(),
+);
+
+type CB = (store: WritableAtom<TimelineData>, add: TimelineData) => void;
+
+export const updateTimelineState = action<WritableAtom<TimelineData>, CB>(
+  sharedTimelineState,
+  'updateTimelineState',
+  async (store, newTimelineState) => {
+    store.set(newTimelineState);
+  },
 );
 
 export const getDaysIncludingFirstEntry = (timeline: TimelineData) => {
