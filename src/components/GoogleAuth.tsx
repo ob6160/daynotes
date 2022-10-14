@@ -177,14 +177,7 @@ const GoogleLogin = () => {
               tokenResponse.access_token,
               existingBackup.id,
             );
-
-            console.log('Setting note state: ', backupTimelineData);
-            window.localStorage.setItem(
-              'note_state',
-              JSON.stringify(backupTimelineData),
-            );
             updateTimelineState(backupTimelineData);
-            // getInitialTimelineState();
           }
         }
 
