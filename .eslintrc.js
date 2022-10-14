@@ -4,7 +4,6 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:functional/no-mutations',
     'plugin:astro/recommended',
     'preact',
   ],
@@ -16,12 +15,6 @@ module.exports = {
     'functional/no-let': 0,
     'functional/prefer-readonly-type': 0,
     'functional/no-method-signature': 0,
-    'functional/immutable-data': [
-      'error',
-      {
-        ignoreImmediateMutation: true,
-      },
-    ],
     'no-var': 'error',
     'no-param-reassign': 'error',
     'prefer-const': 'error',

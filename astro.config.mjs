@@ -18,7 +18,7 @@ const vercelBuildConfig = {
 // https://astro.build/config
 export default defineConfig({
   // Enable Preact to support Preact JSX components.
-  integrations: [preact({ compat: false })],
+  integrations: [preact({ compat: true })],
   // Enable SSR on Vercel.
   ...(NODE_ENV !== 'development' ? vercelBuildConfig : {}),
   // Custom vite configuration.
