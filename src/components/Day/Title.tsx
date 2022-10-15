@@ -28,7 +28,7 @@ const Title = ({ date, hasContent }: TitleProps) => {
   return (
     <section class={styles.title}>
       <section>
-        <h2>{dayPart}</h2>
+        <h2 class={styles.titleHeader}>{dayPart}</h2>
         <p class={styles.tagline}>{`${monthPart} ${yearPart}`}</p>
       </section>
       {hasContent && (
