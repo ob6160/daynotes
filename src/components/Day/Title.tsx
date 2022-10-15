@@ -1,7 +1,7 @@
 import { useMemo } from 'preact/hooks';
 import { DateTimestamp, useTimelineState } from '../../lib/timelineStore';
 
-import './Title.scss';
+import styles from './Title.module.css';
 
 type TitleProps = {
   date: DateTimestamp;
@@ -26,14 +26,14 @@ const Title = ({ date, hasContent }: TitleProps) => {
   });
 
   return (
-    <section class="title">
+    <section class={styles.title}>
       <section>
         <h2>{dayPart}</h2>
-        <p class="tagline">{`${monthPart} ${yearPart}`}</p>
+        <p class={styles.tagline}>{`${monthPart} ${yearPart}`}</p>
       </section>
       {hasContent && (
         <button
-          class="secondary collapse"
+          class={`secondary ${styles.collapseButton}`}
           onClick={() => setDayCollapsed(!isCollapsed)}
           aria-label="Collapse the day content"
           aria-pressed={!isCollapsed}

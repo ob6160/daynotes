@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'preact/hooks';
 import { DateTimestamp, useTimelineState } from '../../lib/timelineStore';
 import Note from '../Fields/Note/Note';
 import Title from './Title';
-import './Day.scss';
+import styles from './Day.module.css';
 import Song from '../Fields/Song/Song';
 import Picture from '../Fields/Picture/Picture';
 import Book from '../Fields/Book/Book';
@@ -28,14 +28,14 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
   const addLink = useCallback(() => addEntry('links'), [addEntry]);
 
   return (
-    <li class="day">
-      <section>
+    <li class={styles.dayListItem}>
+      <section class={styles.dayContainer}>
         <Title
           date={date}
           hasContent={hasContent}
         />
         {showContent && (
-          <section class="content">
+          <section class={styles.content}>
             {notes.map(([id, props]) => (
               <Note
                 key={id}
@@ -73,9 +73,9 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             {children}
           </section>
         )}
-        <section class="controls">
+        <section class={styles.controls}>
           <button
-            class="action"
+            class={styles.action}
             aria-label="Add a note"
             onClick={addNote}
           >
@@ -85,7 +85,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             />
           </button>
           <button
-            class="action"
+            class={styles.action}
             aria-disabled="true"
             aria-label="Add a link"
             title="Disabled, not implemented yet"
@@ -97,7 +97,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             />
           </button>
           <button
-            class="action"
+            class={styles.action}
             aria-label="Add a picture"
             aria-disabled="true"
             disabled={true}
@@ -110,7 +110,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             />
           </button>
           <button
-            class="action"
+            class={styles.action}
             aria-label="Add a book"
             aria-disabled="true"
             disabled={true}
@@ -123,7 +123,7 @@ const Day: FunctionComponent<DayProps> = ({ date, children }) => {
             />
           </button>
           <button
-            class="action"
+            class={styles.action}
             aria-label="Add a song"
             aria-disabled="true"
             disabled={true}

@@ -33,7 +33,7 @@
     "@react-oauth/google": "^0.2.8",
     "modern-css-reset": "^1.4.0",
     "nanostores": "^0.7.0",
-    "preact": "^10.11.1",
+    "preact": "^10.11.2",
     "zod": "^3.19.1"
   }
 }

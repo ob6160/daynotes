@@ -1,0 +1,17 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.tagline {
+  font-size: var(--s1);
+  margin: 0;
+}
+
+.collapseButton {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  height: 50%;
+}
