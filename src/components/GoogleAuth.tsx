@@ -136,8 +136,31 @@ const listSyncFiles = (accessToken: string) => {
   });
 };
 
-const readSessionCookie = (): string | undefined =>
+const readSessionCookie = (): TokenResponse =>
   JSON.parse(Cookies.get('daynotes_session') || '');
+
+const writeTodaysBackup = async (state: string, accessToken: string) => {
+  const existingBackup = await checkBackupExists(
+    accessToken,
+    getTodayTimestamp(),
+  );
+
+  if (existingBackup) {
+    await deleteFileById(accessToken, existingBackup.id);
+  }
+
+  const uploadedFileRef = await uploadSyncFile(accessToken, state);
+
+  console.log('Successfully replaced and uploaded file', uploadedFileRef);
+};
+
+const restoreFromBackup = async (backupFileId: string, accessToken: string) => {
+  const backupTimelineData = await getBackupFileContents(
+    accessToken,
+    backupFileId,
+  );
+  updateTimelineState(backupTimelineData);
+};
 
 const GoogleLogin = () => {
   const $timelineState = useStore(sharedTimelineState);
@@ -158,44 +181,31 @@ const GoogleLogin = () => {
         Cookies.set('daynotes_session', JSON.stringify(tokenResponse), {
           sameSite: 'Strict',
           secure: true,
-          domain: 'localhost',
           expires: expiresIn,
         });
 
-        const mode = tokenResponse.state === 'write' ? 'write' : 'read';
-
-        const existingBackup = await checkBackupExists(
-          tokenResponse.access_token,
-          getTodayTimestamp(),
-        );
+        const mode =
+          tokenResponse.state === 'write'
+            ? 'write'
+            : tokenResponse.state === 'read_latest'
+            ? 'read_latest'
+            : 'read';
 
         if (mode === 'write') {
-          if (existingBackup) {
-            await deleteFileById(tokenResponse.access_token, existingBackup.id);
-          }
-
-          const uploadedFileRef = await uploadSyncFile(
+          writeTodaysBackup(stateAsString, tokenResponse.access_token);
+        } else if (mode === 'read_latest') {
+          const existingBackup = await checkBackupExists(
             tokenResponse.access_token,
-            stateAsString,
+            getTodayTimestamp(),
           );
-
-          console.log(
-            'Successfully replaced and uploaded file',
-            uploadedFileRef,
-          );
-        } else if (mode === 'read') {
           if (existingBackup) {
-            const backupTimelineData = await getBackupFileContents(
-              tokenResponse.access_token,
-              existingBackup.id,
-            );
-            updateTimelineState(backupTimelineData);
+            restoreFromBackup(existingBackup.id, tokenResponse.access_token);
           }
+        } else if (mode === 'read') {
+          const result = await listSyncFiles(tokenResponse.access_token);
+          const searchResultJSON = await result.json();
+          setAvailableNotes(searchResultJSON?.files);
         }
-
-        const result = await listSyncFiles(tokenResponse.access_token);
-        const searchResultJSON = await result.json();
-        setAvailableNotes(searchResultJSON?.files);
       } catch (e) {
         console.error(e);
       }
@@ -208,10 +218,17 @@ const GoogleLogin = () => {
     onSuccess: googleLoginSuccessHandler,
   });
 
-  const googleReadLatestClickHandler = useCallback(() => {
+  const googleReadLatestClickHandler = useCallback(async () => {
     try {
       const sessionCookie = readSessionCookie();
-      console.log(sessionCookie);
+      const existingBackup = await checkBackupExists(
+        sessionCookie.access_token,
+        getTodayTimestamp(),
+      );
+      if (existingBackup) {
+        restoreFromBackup(existingBackup.id, sessionCookie.access_token);
+        console.log('Backup read success!');
+      }
     } catch (e: unknown) {
       return initiateGoogleLogin({ state: 'read_latest' });
     }
