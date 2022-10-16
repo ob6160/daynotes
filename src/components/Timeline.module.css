@@ -1,0 +1,5 @@
+.linkDayCardGrid {
+  display: grid;
+  gap: var(--s2);
+  padding: 0;
+}

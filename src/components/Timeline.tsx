@@ -7,7 +7,8 @@ import {
   sharedTimelineState,
   TimelineStore,
 } from '../lib/timelineStore';
-import './Timeline.scss';
+
+import styles from './Timeline.module.css';
 
 const Timeline = () => {
   const $timelineState = useStore(sharedTimelineState);
@@ -35,8 +36,8 @@ const Timeline = () => {
 
   return (
     <TimelineStore.Provider value={sharedTimelineState}>
-      <section class="timeline">
-        <ul class="link-card-grid">{timeline}</ul>
+      <section>
+        <ul class={styles.linkDayCardGrid}>{timeline}</ul>
       </section>
     </TimelineStore.Provider>
   );

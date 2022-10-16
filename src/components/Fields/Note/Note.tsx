@@ -1,7 +1,8 @@
 import { useCallback } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
 import { DateTimestamp, useTimelineState } from '../../../lib/timelineStore';
-import '../Note.scss';
+
+import styles from '../Note.module.css';
 
 type NoteProps = {
   id: string;
@@ -32,14 +33,14 @@ const Note = ({ content, id, date }: NoteProps) => {
   }, [content, id, setNoteCompletion]);
 
   return (
-    <section class="note">
-      <section class="editor">
+    <section class={styles.note}>
+      <section class={styles.editor}>
         {isCompleted ? (
-          <section class="final-content">
+          <section class={styles.finalContent}>
             <p>{content}</p>
           </section>
         ) : (
-          <section class="inputs">
+          <section class={styles.inputs}>
             <textarea
               placeholder="Write in me!"
               value={content}
@@ -48,10 +49,10 @@ const Note = ({ content, id, date }: NoteProps) => {
           </section>
         )}
 
-        <section class="buttons">
+        <section class={styles.buttons}>
           {isCompleted && (
             <button
-              class="secondary edit"
+              class={`secondary ${styles.edit}`}
               onClick={() => setNoteCompletion(false, id)}
               aria-label="Edit this note"
               aria-pressed={!isCompleted}
@@ -65,7 +66,7 @@ const Note = ({ content, id, date }: NoteProps) => {
           {!isCompleted && (
             <>
               <button
-                class="approve"
+                class={styles.approve}
                 onClick={completeNoteIfPopulated}
                 aria-label="Save your edits"
               >
@@ -75,7 +76,7 @@ const Note = ({ content, id, date }: NoteProps) => {
                 />
               </button>
               <button
-                class="clear"
+                class={styles.clear}
                 onClick={() => removeNote(id)}
                 aria-label="Delete this note"
               >

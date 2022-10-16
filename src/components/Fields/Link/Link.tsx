@@ -1,7 +1,8 @@
 import { useCallback } from 'preact/hooks';
 import { JSXInternal } from 'preact/src/jsx';
 import { DateTimestamp, useTimelineState } from '../../../lib/timelineStore';
-import '../Note.scss';
+
+import styles from '../Note.module.css';
 
 type LinkProps = {
   id: string;
@@ -48,10 +49,10 @@ const Link = ({ url, id, date, title }: LinkProps) => {
   }, [id, setNoteCompletion]);
 
   return (
-    <section class="note">
-      <section class="editor">
+    <section class={styles.note}>
+      <section class={styles.editor}>
         {isCompleted ? (
-          <section class="final-content">
+          <section class={styles.finalContent}>
             <a
               href={url}
               target="_blank"
@@ -61,7 +62,7 @@ const Link = ({ url, id, date, title }: LinkProps) => {
             </a>
           </section>
         ) : (
-          <section class="inputs">
+          <section class={styles.inputs}>
             <label>
               Title
               <input
@@ -82,10 +83,10 @@ const Link = ({ url, id, date, title }: LinkProps) => {
           </section>
         )}
 
-        <section class="buttons">
+        <section class={styles.buttons}>
           {isCompleted && (
             <button
-              class="secondary edit"
+              class={`secondary ${styles.edit}`}
               onClick={edit}
               aria-label="Edit this note"
               aria-pressed={!isCompleted}
@@ -99,7 +100,7 @@ const Link = ({ url, id, date, title }: LinkProps) => {
           {!isCompleted && (
             <>
               <button
-                class="approve"
+                class={styles.approve}
                 onClick={completeIfPopulated}
                 aria-label="Save your edits"
               >
@@ -109,7 +110,7 @@ const Link = ({ url, id, date, title }: LinkProps) => {
                 />
               </button>
               <button
-                class="clear"
+                class={styles.clear}
                 onClick={remove}
                 aria-label="Delete this note"
               >

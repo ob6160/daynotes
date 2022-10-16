@@ -5,7 +5,8 @@ import {
   mapReplacer,
   TimelineData,
 } from '../lib/timelineStore';
-import './Backup.scss';
+
+import styles from './Backup.module.css';
 
 const Backup = () => {
   const state = useState<TimelineData>(getInitialTimelineState());
@@ -56,8 +57,8 @@ const Backup = () => {
   );
 
   return (
-    <section class="backup">
-      <section class="export">
+    <section class={styles.backup}>
+      <section class={styles.export}>
         <button
           aria-label="Export your data"
           aria-pressed={exportMode}
@@ -102,13 +103,14 @@ const Backup = () => {
               )}
             </button>
             <textarea
+              class={styles.backupData}
               readOnly
               value={stateAsString}
             />
           </>
         )}
       </section>
-      <section class="import">
+      <section class={styles.import}>
         <button
           aria-label="Import your data as JSON"
           aria-pressed={importMode}
@@ -141,7 +143,7 @@ const Backup = () => {
                     aria-hidden="true"
                     class="fa-solid fa-upload"
                   />
-                  <p class="warning">
+                  <p class={styles.warning}>
                     (warning — this will overwrite your existing daynotes)
                   </p>
                 </>
@@ -156,6 +158,7 @@ const Backup = () => {
               )}
             </button>
             <textarea
+              class={styles.backupData}
               onInput={importValueInput}
               value={importValue}
             />
