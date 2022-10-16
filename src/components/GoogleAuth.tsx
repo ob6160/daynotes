@@ -3,7 +3,7 @@ import {
   useGoogleLogin,
   TokenResponse,
 } from '@react-oauth/google';
-
+import Cookies from 'js-cookie';
 import { useCallback, useState } from 'preact/hooks';
 import { useStore } from '@nanostores/preact';
 import {
@@ -136,6 +136,9 @@ const listSyncFiles = (accessToken: string) => {
   });
 };
 
+const readSessionCookie = (): string | undefined =>
+  JSON.parse(Cookies.get('daynotes_session') || '');
+
 const GoogleLogin = () => {
   const $timelineState = useStore(sharedTimelineState);
   const stateAsString = JSON.stringify($timelineState, mapReplacer);
@@ -150,6 +153,15 @@ const GoogleLogin = () => {
       >,
     ) => {
       try {
+        const expiresIn = new Date();
+        expiresIn.setSeconds(expiresIn.getSeconds() + tokenResponse.expires_in);
+        Cookies.set('daynotes_session', JSON.stringify(tokenResponse), {
+          sameSite: 'Strict',
+          secure: true,
+          domain: 'localhost',
+          expires: expiresIn,
+        });
+
         const mode = tokenResponse.state === 'write' ? 'write' : 'read';
 
         const existingBackup = await checkBackupExists(
@@ -181,9 +193,9 @@ const GoogleLogin = () => {
           }
         }
 
-        // const result = await listSyncFiles(tokenResponse.access_token);
-        // const searchResultJSON = await result.json();
-        // setAvailableNotes(searchResultJSON?.files);
+        const result = await listSyncFiles(tokenResponse.access_token);
+        const searchResultJSON = await result.json();
+        setAvailableNotes(searchResultJSON?.files);
       } catch (e) {
         console.error(e);
       }
@@ -196,8 +208,13 @@ const GoogleLogin = () => {
     onSuccess: googleLoginSuccessHandler,
   });
 
-  const googleReadClickHandler = useCallback(() => {
-    return initiateGoogleLogin({ state: 'read' });
+  const googleReadLatestClickHandler = useCallback(() => {
+    try {
+      const sessionCookie = readSessionCookie();
+      console.log(sessionCookie);
+    } catch (e: unknown) {
+      return initiateGoogleLogin({ state: 'read_latest' });
+    }
   }, [initiateGoogleLogin]);
 
   const googleWriteClickHandler = useCallback(() => {
@@ -206,11 +223,15 @@ const GoogleLogin = () => {
 
   return (
     <>
-      <button onClick={googleReadClickHandler}>Google Drive read</button>
+      <button onClick={googleReadLatestClickHandler}>
+        Google Drive read latest
+      </button>
       <button onClick={googleWriteClickHandler}>Google Drive write</button>
       <ul>
         {availableNotes.map(({ name, id }) => (
-          <li key={id}>{name}</li>
+          <li key={id}>
+            {name} <button>Restore</button>
+          </li>
         ))}
       </ul>
     </>
