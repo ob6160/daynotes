@@ -1,19 +1,12 @@
 ---
 import Timeline from '../components/Timeline';
-import GoogleAuth from '../components/GoogleAuth';
 import PageLayout from '../layouts/PageLayout.astro';
-
-const googleOauthClientId = import.meta.env.GOOGLE_OAUTH_CLIENT_ID;
 ---
 
 <PageLayout>
   <!-- <h2 class="subtitle">
     Keep track of the small things. They're worth remembering.
   </h2> -->
-  <GoogleAuth
-    client:only="preact"
-    googleClientId={googleOauthClientId}
-  />
   <Timeline client:idle />
 </PageLayout>
 
